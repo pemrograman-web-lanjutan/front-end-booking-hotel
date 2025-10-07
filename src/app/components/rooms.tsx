@@ -123,9 +123,9 @@ export default function RoomsPages() {
                   </table>
                 </div>
                 <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">
+                  {/* <p className="text-sm text-gray-600 mb-2">
                     {room.size ?? "—"}
-                  </p>
+                  </p> */}
 
                   <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
                     {(room.facilities ?? hotel.facilities).map((f, i) => (

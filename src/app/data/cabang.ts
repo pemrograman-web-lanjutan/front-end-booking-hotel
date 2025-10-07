@@ -31,7 +31,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Deluxe Twin",
-        size: "20.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "fully_booked",
@@ -59,7 +58,6 @@ export const RoomsHotels = [
       {
         id: 2,
         name: "Family",
-        size: "36.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC", "Balkon"],
         status: "available",
@@ -115,7 +113,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Superior Room",
-        size: "28.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -134,7 +131,6 @@ export const RoomsHotels = [
       {
         id: 2,
         name: "Suite",
-        size: "40.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC", "Balkon"],
         status: "available",
@@ -181,7 +177,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Standard Room",
-        size: "18.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -228,7 +223,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Deluxe Room",
-        size: "30.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -275,7 +269,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Beachfront Suite",
-        size: "45.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -322,7 +315,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Superior Room",
-        size: "24.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -369,7 +361,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Sea View Room",
-        size: "32.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Pantai", "AC"],
         status: "available",
@@ -416,7 +407,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Deluxe Room",
-        size: "28.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
         status: "available",
@@ -463,7 +453,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Island Suite",
-        size: "38.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "AC"],
         status: "available",
@@ -510,7 +499,6 @@ export const RoomsHotels = [
       {
         id: 1,
         name: "Cliff Suite",
-        size: "50.0 m²",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "Shower", "AC"],
         status: "available",
