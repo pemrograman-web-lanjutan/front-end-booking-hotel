@@ -29,7 +29,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Parkir", "Restoran", "Kolam Renang"],
     rooms: [
       {
-        id: 1,
+        id: 101,
         name: "Deluxe Twin",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -56,7 +56,7 @@ export const RoomsHotels = [
         ],
       },
       {
-        id: 2,
+        id: 102,
         name: "Family",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC", "Balkon"],
@@ -111,7 +111,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Restoran", "AC", "Shuttle Bandara"],
     rooms: [
       {
-        id: 1,
+        id: 103,
         name: "Superior Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -129,7 +129,7 @@ export const RoomsHotels = [
         ],
       },
       {
-        id: 2,
+        id: 104,
         name: "Suite",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC", "Balkon"],
@@ -175,7 +175,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Restoran", "AC"],
     rooms: [
       {
-        id: 1,
+        id: 105,
         name: "Standard Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -221,7 +221,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Spa", "Kolam Renang"],
     rooms: [
       {
-        id: 1,
+        id: 106,
         name: "Deluxe Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -267,7 +267,7 @@ export const RoomsHotels = [
     facilities: ["Pantai Pribadi", "Spa", "Restoran"],
     rooms: [
       {
-        id: 1,
+        id: 107,
         name: "Beachfront Suite",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "Shower", "AC"],
@@ -313,7 +313,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Restoran", "Kolam Renang"],
     rooms: [
       {
-        id: 1,
+        id: 108,
         name: "Superior Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -359,7 +359,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Pantai", "AC"],
     rooms: [
       {
-        id: 1,
+        id: 109,
         name: "Sea View Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Pantai", "AC"],
@@ -405,7 +405,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Bar", "Kolam Renang"],
     rooms: [
       {
-        id: 1,
+        id: 110,
         name: "Deluxe Room",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["WiFi Gratis", "Shower", "AC"],
@@ -451,7 +451,7 @@ export const RoomsHotels = [
     facilities: ["WiFi Gratis", "Pantai", "Shuttle Kapal"],
     rooms: [
       {
-        id: 1,
+        id: 111,
         name: "Island Suite",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "AC"],
@@ -497,7 +497,7 @@ export const RoomsHotels = [
     facilities: ["Pantai", "Spa", "WiFi Gratis"],
     rooms: [
       {
-        id: 1,
+        id: 112,
         name: "Cliff Suite",
         image: "/hotel/Roomcanggu-2.png",
         facilities: ["Pantai", "WiFi Gratis", "Shower", "AC"],

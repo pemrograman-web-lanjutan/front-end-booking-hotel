@@ -1,13 +1,18 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { User } from "lucide-react";
 import Image from "next/image";
 import { RoomsHotels } from "../data/cabang";
+import BookingForm from "../components/BookingForm";
+import RoomDetailModal from "./RoomDetailModal";
+import { useState } from "react";
+import { User } from "lucide-react";
 
 export default function RoomsPages() {
   const searchParams = useSearchParams();
   const city = searchParams.get("city") ?? "";
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const [showDetail, setShowDetail] = useState<number | null>(null);
 
   const hotel = RoomsHotels.find(
     (h) => h.city.toLowerCase() === city.toLowerCase()
@@ -15,13 +20,8 @@ export default function RoomsPages() {
 
   if (!hotel) {
     return (
-      <div className="p-6 min-h-screen bg-[var(--primary)]">
-        <h1 className="text-2xl font-bold text-white text-center">
-          Rekomendasi Kamar Hotel Inferno di {city || "—"}
-        </h1>
-        <p className="text-center text-white/90 mt-8">
-          Maaf, tidak ditemukan hotel untuk kota ini.
-        </p>
+      <div className="p-6 min-h-screen bg-[var(--primary)] text-center text-white">
+        <h1 className="text-2xl font-bold">Hotel tidak ditemukan di {city}</h1>
       </div>
     );
   }
@@ -36,7 +36,8 @@ export default function RoomsPages() {
         {hotel.rooms.map((room) => (
           <div
             key={room.id}
-            className="bg-white rounded-2xl p-6 border-4 border-[var(--primary)] shadow-md overflow-hidden">
+            className="bg-white rounded-2xl p-6 border-4 border-[var(--primary)] shadow-md overflow-hidden"
+          >
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               {room.name}
             </h2>
@@ -52,9 +53,15 @@ export default function RoomsPages() {
                     className="w-full h-[500px] object-cover"
                   />
                 </div>
+                <button
+                  onClick={() => setShowDetail(room.id)}
+                  className="mt-4 w-full text-blue-500 py-2 rounded-xl hover:text-blue-700 transition hover:underline"
+                >
+                  Lihat Detail
+                </button>
               </div>
 
-              <div className="md:w-2/3 w-full flex flex-col gap-10">
+              <div className="md:w-2/3 w-full">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm border border-gray-200">
                     <thead>
@@ -65,7 +72,6 @@ export default function RoomsPages() {
                         <th className="p-3"></th>
                       </tr>
                     </thead>
-
                     <tbody>
                       {room.options?.map((opt, idx) => (
                         <tr key={idx} className="border-t align-top">
@@ -84,19 +90,13 @@ export default function RoomsPages() {
                           </td>
 
                           <td className="p-4 text-center">
-                            <div className="relative inline-block group">
-                              <div className="flex justify-center gap-1">
-                                {[...Array(opt.capacity)].map((_, i) => (
-                                  <User
-                                    key={i}
-                                    className="w-5 h-5 text-gray-600"
-                                  />
-                                ))}
-                              </div>
-                              <div className="absolute left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition bg-blue-900 text-white text-xs rounded-lg px-3 py-1 shadow-lg whitespace-nowrap z-50">
-                                {`${opt.capacity} orang`}
-                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 bg-blue-900"></div>
-                              </div>
+                            <div className="flex justify-center gap-1">
+                              {[...Array(opt.capacity)].map((_, i) => (
+                                <User
+                                  key={i}
+                                  className="w-5 h-5 text-gray-600"
+                                />
+                              ))}
                             </div>
                           </td>
 
@@ -113,7 +113,10 @@ export default function RoomsPages() {
                           </td>
 
                           <td className="p-4 text-center">
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <button
+                              onClick={() => setSelectedRoomId(room.id)}
+                              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            >
                               Pilih
                             </button>
                           </td>
@@ -122,22 +125,31 @@ export default function RoomsPages() {
                     </tbody>
                   </table>
                 </div>
-                <div className="mt-4">
-                  {/* <p className="text-sm text-gray-600 mb-2">
-                    {room.size ?? "—"}
-                  </p> */}
 
-                  <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
-                    {(room.facilities ?? hotel.facilities).map((f, i) => (
-                      <li key={i}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 mt-4">
+                  {(room.facilities ?? hotel.facilities).map((f, i) => (
+                    <li key={i}>{f}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {selectedRoomId && (
+        <BookingForm
+          roomId={selectedRoomId}
+          onClose={() => setSelectedRoomId(null)}
+        />
+      )}
+
+      {showDetail && (
+        <RoomDetailModal
+          roomId={showDetail}
+          onClose={() => setShowDetail(null)}
+        />
+      )}
     </div>
   );
 }
