@@ -9,6 +9,8 @@ export const RoomsHotels = [
     address: "Jl. Raya Ubud No.1",
     rating: 4,
     status: "available",
+    lat: -8.519,
+    lng: 115.263,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -91,6 +93,8 @@ export const RoomsHotels = [
     address: "Jl. Batu Bolong No.99",
     rating: 3,
     status: "available",
+    lat: -8.647817,
+    lng: 115.138519,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -155,6 +159,8 @@ export const RoomsHotels = [
     address: "Jl. Pantai Kuta No.8",
     rating: 5,
     status: "available",
+    lat: -8.723744,
+    lng: 115.175652,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -200,6 +206,8 @@ export const RoomsHotels = [
     branch: "Inferno Hotel Seminyak",
     rating: 5,
     status: "available",
+    lat: -8.690995,
+    lng: 115.168207,
 
     address: "Jl. Kayu Aya No.12",
     image: "/hotel/Roomcanggu-2.png",
@@ -247,6 +255,8 @@ export const RoomsHotels = [
     address: "Jl. Nusa Dua Selatan No.88",
     rating: 5,
     status: "available",
+    lat: -8.807164,
+    lng: 115.230004,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -293,6 +303,8 @@ export const RoomsHotels = [
     address: "Jl. Danau Tamblingan No.45",
     rating: 5,
     status: "available",
+    lat: -8.695,
+    lng: 115.262,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -339,6 +351,8 @@ export const RoomsHotels = [
     address: "Jl. Uluwatu II No.33",
     rating: 5,
     status: "available",
+    lat: -8.778086,
+    lng: 115.166793,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -385,6 +399,8 @@ export const RoomsHotels = [
     address: "Jl. Legian Raya No.5",
     rating: 5,
     status: "available",
+    lat: -8.708299,
+    lng: 115.171667,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [
@@ -430,6 +446,8 @@ export const RoomsHotels = [
     branch: "Inferno Hotel Nusa Penida",
     rating: 5,
     status: "available",
+    lat: -8.727999,
+    lng: 115.544423,
 
     address: "Jl. Ped No.7",
     image: "/hotel/Roomcanggu-2.png",
@@ -477,6 +495,8 @@ export const RoomsHotels = [
     address: "Jl. Labuan Sait No.88",
     rating: 5,
     status: "available",
+    lat: -8.8296,
+    lng: 115.086167,
 
     image: "/hotel/Roomcanggu-2.png",
     gallery: [

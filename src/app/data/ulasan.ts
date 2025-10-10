@@ -1,4 +1,3 @@
-// src/app/home/data/reviews.ts
 export type Review = {
   id: number;
   name: string;
@@ -6,6 +5,7 @@ export type Review = {
   text: string;
   rating: number;
   date: string;
+  city: string;
 };
 
 export const reviews: Review[] = [
@@ -16,6 +16,7 @@ export const reviews: Review[] = [
     text: "Semua staf ramah-ramah, kolam renang bersih, ada tempat bermain anak-anak. Pokoknya nyaman menginap di hotel ini.",
     rating: 5,
     date: "2025-09-29",
+    city: "kuta",
   },
   {
     id: 2,
@@ -24,6 +25,7 @@ export const reviews: Review[] = [
     text: "Lokasi strategis dekat pusat kota, tapi parkir agak sempit.",
     rating: 3,
     date: "2025-09-20",
+    city: "ubud",
   },
   {
     id: 3,
@@ -32,6 +34,7 @@ export const reviews: Review[] = [
     text: "Harga cukup terjangkau, namun sarapan perlu ditingkatkan.",
     rating: 4,
     date: "2025-09-18",
+    city: "ubud",
   },
   {
     id: 4,
@@ -40,6 +43,7 @@ export const reviews: Review[] = [
     text: "Suasana tenang dan kamar sangat bersih.",
     rating: 5,
     date: "2025-09-15",
+    city: "ubud",
   },
   {
     id: 5,
@@ -48,6 +52,7 @@ export const reviews: Review[] = [
     text: "Pelayanan ramah tapi AC kamar agak berisik.",
     rating: 4,
     date: "2025-09-10",
+    city: "ubud",
   },
   {
     id: 6,
@@ -56,5 +61,6 @@ export const reviews: Review[] = [
     text: "Sangat puas! Akan kembali lagi ke sini.",
     rating: 2,
     date: "2025-09-05",
+    city: "sanur",
   },
 ];
