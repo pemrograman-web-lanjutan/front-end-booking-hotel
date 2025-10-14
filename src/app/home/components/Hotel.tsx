@@ -33,15 +33,15 @@ function HotelCard({ hotel }: { hotel: any }) {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (hovering && hotel.galeryRooms?.length > 1) {
+    if (hovering && hotel.image?.length > 1) {
       interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % hotel.galeryRooms.length);
+        setCurrentIndex((prev) => (prev + 1) % hotel.image.length);
       }, 1000);
     } else {
       setCurrentIndex(0);
     }
     return () => clearInterval(interval);
-  }, [hovering, hotel.galeryRooms]);
+  }, [hovering, hotel.image]);
 
   return (
     <div
@@ -49,8 +49,8 @@ function HotelCard({ hotel }: { hotel: any }) {
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}>
       <Image
-        src={hotel.galeryRooms[currentIndex].src}
-        alt={hotel.galeryRooms[currentIndex].alt}
+        src={hotel.image[currentIndex].src}
+        alt={hotel.image[currentIndex].alt}
         width={400}
         height={600}
         className="w-full aspect-[3/4] object-cover rounded-t-2xl transition-all duration-500"
