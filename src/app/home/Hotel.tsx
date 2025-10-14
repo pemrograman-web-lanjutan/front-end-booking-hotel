@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { RoomsHotels } from "../../data/cabang";
+import { RoomsHotels } from "../data/cabang";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 

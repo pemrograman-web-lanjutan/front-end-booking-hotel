@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { RoomsHotels } from "../../data/cabang";
-import { reviews, Review } from "../../data/ulasan";
+import { RoomsHotels } from "../data/cabang";
+import { reviews, Review } from "../data/ulasan";
 export default function Ulasan() {
   const [selectedHotel, setSelectedHotel] = useState<number | null>(null);
   const [review, setReview] = useState("");
@@ -19,7 +19,7 @@ export default function Ulasan() {
     // bikin data review baru
     const newReview: Review = {
       id: reviews.length + 1,
-      name: "Traveler Baru", // bisa diganti dari auth user nanti
+      name: "Traveler Baru",
       avatar: "/user/default-avatar.png",
       text: review,
       rating,

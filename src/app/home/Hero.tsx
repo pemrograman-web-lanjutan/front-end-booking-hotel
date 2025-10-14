@@ -16,7 +16,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { RoomsHotels } from "../../data/cabang";
+import { RoomsHotels } from "../data/cabang";
 
 export default function Hero() {
   const [adults, setAdults] = useState(1);

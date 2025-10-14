@@ -1,11 +1,12 @@
 "use client";
 
 import Navbar from "./components/Navbar";
-import Hero from "./home/components/Hero";
-import About from "./home/components/About";
-import Hotel from "./home/components/Hotel";
-import Ulasan from "./home/components/ulasan";
+import Hero from "./home/Hero";
+import About from "./home/About";
+import Hotel from "./home/Hotel";
+import Ulasan from "./home/ulasan";
 import GoogleMapHotels from "./components/map";
+import HotelList from "./api/hotels/route";
 import FooterSection from "./components/Footer";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <Hotel />
       <GoogleMapHotels />
       <Ulasan />
+      <HotelList />
       <FooterSection />
     </div>
   );
