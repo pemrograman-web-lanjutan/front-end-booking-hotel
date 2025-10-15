@@ -4,10 +4,10 @@ import Navbar from "./components/Navbar";
 import Hero from "./home/Hero";
 import About from "./home/About";
 import Hotel from "./home/Hotel";
-import Ulasan from "./home/ulasan";
-import GoogleMapHotels from "./components/map";
+import FormUlasan from "./home/FormUlasan";
+import GoogleMapHotels from "./home/map";
 import HotelList from "./api/hotels/route";
-import FooterSection from "./components/Footer";
+import FooterSection from "./home/Footer";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <About />
       <Hotel />
       <GoogleMapHotels />
-      <Ulasan />
+      <FormUlasan />
       <HotelList />
       <FooterSection />
     </div>
