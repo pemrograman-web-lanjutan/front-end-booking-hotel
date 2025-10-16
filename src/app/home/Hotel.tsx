@@ -2,13 +2,28 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { RoomsHotels } from "../data/cabang";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Hotel() {
-  const router = useRouter();
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
+  // jumlah total gambar
+  const totalImages = 4;
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined;
+
+    if (isHovered) {
+      interval = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % totalImages);
+      }, 1200);
+    } else {
+      setCurrentImage(0);
+    }
+
+    return () => clearInterval(interval);
+  }, [isHovered]);
   return (
     <section id="hotel" className="py-12 px-4 sm:px-6 lg:px-12">
       <h2
@@ -18,65 +33,51 @@ export default function Hotel() {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {RoomsHotels.map((hotel) => (
-          <HotelCard key={hotel.id} hotel={hotel} />
-        ))}
+        <div
+          className="group overflow-hidden "
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}>
+          <div className="relative w-full aspect-[1/1]">
+            <Image
+              src={`/hotel/ubud-${currentImage + 1}.jpeg`}
+              alt="Hotel Inferno Ubud"
+              fill
+              className="object-cover rounded-tl-2xl transition-all duration-700 ease-in-out"
+            />
+          </div>
+
+          <div className="p-4 text-start">
+            <h3 className="text-base sm:text-lg font-semibold">Ubud Hotel</h3>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Hotek Inferno Ubud
+            </p>
+
+            <div className="flex justify-start mt-2">
+              <Star
+                className={`w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400`}
+              />
+              <Star
+                className={`w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400`}
+              />
+              <Star
+                className={`w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400`}
+              />
+              <Star
+                className={`w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400`}
+              />
+              <Star
+                className={`w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400`}
+              />
+            </div>
+
+            <a
+              href={`/hotel`}
+              className="text-sm sm:text-base font-semibold text-blue-600 hover:text-blue-800 mt-2 block">
+              Lihat Detail
+            </a>
+          </div>
+        </div>
       </div>
     </section>
-  );
-}
-
-function HotelCard({ hotel }: { hotel: any }) {
-  const router = useRouter();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [hovering, setHovering] = useState(false);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (hovering && hotel.image?.length > 1) {
-      interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % hotel.image.length);
-      }, 1000);
-    } else {
-      setCurrentIndex(0);
-    }
-    return () => clearInterval(interval);
-  }, [hovering, hotel.image]);
-
-  return (
-    <div
-      className="group"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}>
-      <Image
-        src={hotel.image[currentIndex].src}
-        alt={hotel.image[currentIndex].alt}
-        width={400}
-        height={600}
-        className="w-full aspect-[3/4] object-cover rounded-t-2xl transition-all duration-500"
-      />
-
-      <div className="p-4 text-start">
-        <h3 className="text-base sm:text-lg font-semibold">{hotel.city}</h3>
-        <p className="text-gray-600 text-sm sm:text-base">{hotel.branch}</p>
-
-        <div className="flex justify-start mt-2">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-4 h-4 sm:w-5 sm:h-5 ${
-                i < 5 ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={() => router.push(`/hotel?city=${hotel.city.toLowerCase()}`)}
-          className="text-sm sm:text-base font-semibold text-blue-600 hover:text-blue-800 mt-2 block">
-          Lihat Detail
-        </button>
-      </div>
-    </div>
   );
 }

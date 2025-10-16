@@ -62,12 +62,12 @@ export default function Hero() {
       alert("Silahkan pilih Kota tujuan Anda terlebih dahulu!");
       return;
     }
-    router.push(`/rooms?city=${encodeURIComponent(query)}`);
+    router.push(`/rooms`);
   };
 
   return (
     <div id="home" className="min-h-screen pb-10">
-      <div className="bg-[var(--primary)] text-white flex flex-col md:flex-row justify-between items-center px-8 pt-20 pb-15">
+      <div className="bg-[var(--primary)] text-white flex flex-col md:flex-row justify-between items-center px-8 pt-20 pb-15 gap-10">
         <div className="flex-1 space-y-4">
           <h1 className="text-2xl font-bold">Reservasi Kamar Hotel Inferno</h1>
           <p className="text-sm">
@@ -76,7 +76,6 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Image Slider */}
         <div className="flex-1 max-w-lg">
           <Swiper
             modules={[Autoplay, Pagination]}
@@ -187,7 +186,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 hidden sm:block">
                 <label className="text-sm text-gray-600 mb-1">
                   Check-Out :
                 </label>

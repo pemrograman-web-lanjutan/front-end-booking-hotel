@@ -1,5 +1,5 @@
 "use client";
-import RoomsPages from "../components/rooms";
+import RoomsPages from "../hotel/[rooms]";
 
 export default function RoomsPage() {
   return (

@@ -1,7 +1,7 @@
-import FooterLogo from "./footer/FooterLogo";
-import FooterAddress from "./footer/FooterAddres";
-import FooterNav from "./footer/FooterNav";
-import FooterContact from "./footer/FooterContact";
+import FooterLogo from "../components/footer/FooterLogo";
+import FooterAddress from "../components/footer/FooterAddres";
+import FooterNav from "../components/footer/FooterNav";
+import FooterContact from "../components/footer/FooterContact";
 
 export default function FooterSection() {
   return (
