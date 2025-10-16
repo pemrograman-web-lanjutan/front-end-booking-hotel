@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
@@ -12,7 +13,9 @@ export default function Register() {
     username: "",
     email: "",
     password: "",
+    phone: "",
     confirmPassword: "",
+    gender: "",
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -21,60 +24,6 @@ export default function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    // Validasi kosong
-    if (
-      !formData.fullname ||
-      !formData.username ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      setError("Semua field harus diisi!");
-      return;
-    }
-
-    // Validasi email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError("Format email tidak valid!");
-      return;
-    }
-
-    // Cek domain email
-    const allowedDomains = [
-      "gmail.com",
-      "yahoo.com",
-      "outlook.com",
-      "hotmail.com",
-    ];
-    const emailDomain = formData.email.split("@")[1]?.toLowerCase();
-    if (!allowedDomains.includes(emailDomain)) {
-      setError(
-        "Gunakan email dengan domain yang valid (gmail, yahoo, outlook, hotmail)."
-      );
-      return;
-    }
-
-    // Validasi password
-    if (formData.password.length < 6) {
-      setError("Password minimal 6 karakter!");
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Konfirmasi password tidak cocok!");
-      return;
-    }
-
-    console.log("Data berhasil divalidasi:", formData);
-
-    // TODO: simpan data ke backend / API
-    router.push("/auth/login"); // setelah register redirect ke login
-  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -95,23 +44,13 @@ export default function Register() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-4">
             <input
               id="fullname"
               name="fullname"
               type="text"
               placeholder="Full Name"
               value={formData.fullname}
-              onChange={handleChange}
-              className="block w-full rounded-md border px-3 py-2 text-base text-black placeholder-gray-500 focus:ring-2 focus:ring-[var(--primary)] focus:outline-none sm:text-sm"
-            />
-
-            <input
-              id="username"
-              name="username"
-              type="text"
-              placeholder="Username"
-              value={formData.username}
               onChange={handleChange}
               className="block w-full rounded-md border px-3 py-2 text-base text-black placeholder-gray-500 focus:ring-2 focus:ring-[var(--primary)] focus:outline-none sm:text-sm"
             />
@@ -125,6 +64,21 @@ export default function Register() {
               onChange={handleChange}
               className="block w-full rounded-md border px-3 py-2 text-base text-black placeholder-gray-500 focus:ring-2 focus:ring-[var(--primary)] focus:outline-none sm:text-sm"
             />
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="Phone number"
+              value={formData.phone}
+              onChange={handleChange}
+              className="block w-full rounded-md border px-3 py-2 text-base text-black placeholder-gray-500 focus:ring-2 focus:ring-[var(--primary)] focus:outline-none sm:text-sm"
+            />
+
+            <select name="gender" id="gender" value={formData.gender} className="block w-full rounded-md border px-3 py-2 text-base text-black placeholder-gray-500 focus:ring-2 focus:ring-[var(--primary)] focus:outline-none sm:text-sm">
+              <option disabled value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
 
             <input
               id="password"
@@ -159,11 +113,11 @@ export default function Register() {
 
           <p className="mt-6 text-center text-sm text-gray-400">
             Already have an account?{" "}
-            <a
+            <Link
               href="/auth/login"
               className="font-semibold text-[var(--primary)] hover:text-[#a33c3c]">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </div>

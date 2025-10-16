@@ -1,40 +1,40 @@
 "use client";
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { handleLogin } from "@/app/auth/handleSubmit";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const adminEmails = ["admin@gmail.com", "superadmin@hotel.com"];
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
-  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Email tidak valid");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password minimal 6 karakter");
-      return;
-    }
-
+    setIsLoading(true);
     setError(null);
 
-    if (adminEmails.includes(email.toLowerCase())) {
-      router.push("/dashboard");
-    } else {
-      router.push("/");
+    try{
+      const data = await handleLogin(email, password);
+
+      if(data.user.role === "admin"){
+        router.push("/dashboard");
+
+      }else{
+        router.push("/")
+      }
+    }catch (err){
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login");
+    }finally{
+      setIsLoading(false);
     }
-  };
+
+  }
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -99,11 +99,11 @@ export default function Login() {
 
           <p className="mt-10 text-center text-sm text-gray-400">
             Don’t have an account?{" "}
-            <a
+            <Link
               href="/auth/register"
               className="font-semibold text-[var(--primary)] hover:text-[#a33c3c]">
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
