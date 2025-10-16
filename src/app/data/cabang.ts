@@ -20,12 +20,12 @@ export const RoomsHotels = [
       ,
     ],
     gallery: [
-      "/canggu/canggu-1.png",
-      "/canggu/canggu-2.png",
-      "/canggu/canggu-3.png",
-      "/canggu/canggu-4.png",
-      "/canggu/canggu-5.png",
-      "/canggu/canggu-6.png",
+      "/hotel/canggu-1.png",
+      "/hotel/canggu-2.png",
+      "/hotel/canggu-3.png",
+      "/hotel/canggu-4.png",
+      "/hotel/canggu-5.png",
+      "/hotel/canggu-6.png",
     ],
     galeryRooms: [
       { src: "/hotel/roomCanggu-1.png", alt: "Kamar Inferno Ubud kiri" },

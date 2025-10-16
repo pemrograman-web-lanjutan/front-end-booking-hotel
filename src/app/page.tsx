@@ -8,6 +8,7 @@ import Ulasan from "./home/ulasan";
 import GoogleMapHotels from "./components/map";
 import HotelList from "./api/hotels/route";
 import FooterSection from "./components/Footer";
+import UlasanList from "./api/ulasan/route";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <GoogleMapHotels />
       <Ulasan />
       <HotelList />
+      <UlasanList />
       <FooterSection />
     </div>
   );

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { reviews } from "../data/ulasan";
 
 function daysAgo(date: string) {
   const today = new Date();
@@ -18,16 +17,6 @@ type Props = {
 };
 
 export default function UlasanList({ city }: Props) {
-  const [page, setPage] = useState(1);
-  const perPage = 5;
-
-  // filter ulasan sesuai city
-  const filtered = reviews.filter((r) => r.city === city);
-
-  // paginasi
-  const start = (page - 1) * perPage;
-  const paginated = filtered.slice(start, start + perPage);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
 
   return (
     <section className="p-4 space-y-4">

@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { Hotel } from "./HotelType";
 export default function HotelList() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Hotel[]>([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/index")

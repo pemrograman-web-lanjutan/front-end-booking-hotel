@@ -1,3 +1,15 @@
+"use client";
+import {useEffect, useState} from "react";
+export type ulasan = {
+  id: number;
+  name: string;
+  avatar: string;
+  text: string;
+  rating: number;
+  date: string;
+  city: string;
+};
+
 export type Review = {
   id: number;
   name: string;
@@ -8,59 +20,9 @@ export type Review = {
   city: string;
 };
 
-export const reviews: Review[] = [
-  {
-    id: 1,
-    name: "Traveler Terverifikasi",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Semua staf ramah-ramah, kolam renang bersih, ada tempat bermain anak-anak. Pokoknya nyaman menginap di hotel ini.",
-    rating: 5,
-    date: "2025-09-29",
-    city: "kuta",
-  },
-  {
-    id: 2,
-    name: "Siti Aminah",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Lokasi strategis dekat pusat kota, tapi parkir agak sempit.",
-    rating: 3,
-    date: "2025-09-20",
-    city: "ubud",
-  },
-  {
-    id: 3,
-    name: "Andi Wijaya",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Harga cukup terjangkau, namun sarapan perlu ditingkatkan.",
-    rating: 4,
-    date: "2025-09-18",
-    city: "ubud",
-  },
-  {
-    id: 4,
-    name: "Budi Santoso",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Suasana tenang dan kamar sangat bersih.",
-    rating: 5,
-    date: "2025-09-15",
-    city: "ubud",
-  },
-  {
-    id: 5,
-    name: "Dewi Laras",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Pelayanan ramah tapi AC kamar agak berisik.",
-    rating: 4,
-    date: "2025-09-10",
-    city: "ubud",
-  },
-  {
-    id: 6,
-    name: "Rian Saputra",
-    avatar: "/user/wisnu-sutradara.jpg",
-    text: "Sangat puas! Akan kembali lagi ke sini.",
-    rating: 2,
-    date: "2025-09-05",
-    city: "sanur",
-  },
-];
+export default async function getReviews(): Promise<Review[]> 
+{
+  const response = await fetch("http://127.0.0.1:8000/api/ulasan/");
+  const data = await response.json();
+  return data.data;
+}
