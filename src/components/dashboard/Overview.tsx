@@ -1,8 +1,8 @@
 "use client";
 
 import { Receipt, Bed, Users } from "lucide-react";
-import { RoomsHotels } from "../../data/cabang";
-import { User } from "../../data/users";
+import { RoomsHotels } from "../../app/data/cabang";
+import { User } from "../../app/data/users";
 
 export default function Overview() {
   const totalHotels = RoomsHotels.length;

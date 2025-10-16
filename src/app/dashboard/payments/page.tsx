@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import PaymentsPage from "../components/Payment";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../../components/dashboard/Navbar";
+import PaymentsPage from "../../../components/dashboard/Payment";
+import Sidebar from "../../../components/dashboard/Sidebar";
 
 export default function Bookings() {
   return (

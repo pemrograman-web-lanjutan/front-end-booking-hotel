@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import RoomTypesPage from "../components/room-type";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../../../components/dashboard/Navbar";
+import RoomTypesPage from "../../../components/dashboard/room-type";
+import Sidebar from "../../../components/dashboard/Sidebar";
 
 export default function Bookings() {
   return (

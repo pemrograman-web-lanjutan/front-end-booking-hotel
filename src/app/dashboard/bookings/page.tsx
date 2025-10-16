@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import BookingTable from "../components/BookingTable";
+import Navbar from "../../../components/dashboard/Navbar";
+import Sidebar from "../../../components/dashboard/Sidebar";
+import BookingTable from "../../../components/dashboard/BookingTable";
 
 export default function Bookings() {
   return (

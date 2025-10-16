@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { RoomsHotels } from "../../data/cabang";
+import { RoomsHotels } from "../../app/data/cabang";
 
 const getStatusLabel = (status: string) => {
   switch (status) {

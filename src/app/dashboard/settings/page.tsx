@@ -1,5 +1,5 @@
-import Sidebar from "../components/Sidebar";
-import SettingPage from "../components/Setting";
+import Sidebar from "../../../components/dashboard/Sidebar";
+import SettingPage from "../../../components/dashboard/Setting";
 
 export default function Dashboard() {
   return (

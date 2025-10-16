@@ -1,7 +1,7 @@
 "use client";
-import Navbar from "@/app/dashboard/components/Navbar";
-import Sidebar from "../components/Sidebar";
-import HotelsPages from "../components/HotelTable";
+import Navbar from "@/components/dashboard/Navbar";
+import Sidebar from "../../../components/dashboard/Sidebar";
+import HotelsPages from "../../../components/dashboard/HotelTable";
 
 export default function HotelsPage() {
   return (

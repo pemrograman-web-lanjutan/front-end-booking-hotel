@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User as allUsers } from "../../data/users";
+import { User as allUsers } from "../../app/data/users";
 
 export default function SettingsPage() {
   const [hotelName, setHotelName] = useState("Inferno Hotel");

@@ -1,7 +1,7 @@
 "use client";
-import HotelBookingReport from "../components/hotels";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import HotelBookingReport from "../../../components/dashboard/hotels";
+import Navbar from "../../../components/dashboard/Navbar";
+import Sidebar from "../../../components/dashboard/Sidebar";
 
 export default function Reports() {
   return (
