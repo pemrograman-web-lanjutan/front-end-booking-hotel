@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import {Toaster} from 'react-hot-toast';
+
 
 import { Playfair_Display, Inter } from "next/font/google";
 
@@ -33,6 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${playfair.variable} ${inter.variable}`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

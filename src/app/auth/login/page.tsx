@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { handleLogin } from "@/app/auth/handleSubmit";
 import Link from "next/link";
 
@@ -11,6 +11,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
@@ -91,8 +93,9 @@ export default function Login() {
             <div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-[var(--primary)] hover:bg-[#a33c3c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A1515]">
-                Sign in
+                {isLoading ? "Loading..." : "Sign In"}
               </button>
             </div>
           </form>
