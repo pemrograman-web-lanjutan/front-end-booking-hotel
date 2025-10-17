@@ -1,6 +1,6 @@
 "use client";
 
-import { RoomsHotels } from "../data/cabang";
+// import { RoomsHotels } from "../data/cabang";
 export default function FormUlasan() {
   return (
     <div className="p-5">
@@ -15,27 +15,20 @@ export default function FormUlasan() {
           </label>
           <select className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
             <option value="">-- Pilih Hotel --</option>
-            {RoomsHotels.map((hotel) => (
-              <option key={hotel.id} value={hotel.id}>
-                {hotel.branch} ({hotel.city})
-              </option>
-            ))}
           </select>
         </div>
 
         <div className="mb-4">
           <label
             htmlFor="review"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+            className="block text-sm font-medium text-gray-700 mb-1">
             Ulasan Anda
           </label>
           <textarea
             id="review"
             rows={4}
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="Tulis ulasan Anda di sini..."
-          ></textarea>
+            placeholder="Tulis ulasan Anda di sini..."></textarea>
         </div>
 
         <div className="mb-4">
@@ -55,8 +48,7 @@ export default function FormUlasan() {
         {/* Tombol Submit */}
         <button
           type="submit"
-          className="w-full bg-[var(--primary)] text-white py-2 px-4 rounded-lg transition"
-        >
+          className="w-full bg-[var(--primary)] text-white py-2 px-4 rounded-lg transition">
           Kirim Ulasan
         </button>
       </form>
