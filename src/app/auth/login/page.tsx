@@ -6,13 +6,12 @@ import { handleLogin } from "@/app/auth/handleSubmit";
 import Link from "next/link";
 
 export default function Login() {
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
@@ -24,15 +23,23 @@ export default function Login() {
       const data = await handleLogin(email, password);
 
       if(data.user.role === "admin"){
+        
         router.push("/dashboard");
 
       }else{
+
         router.push("/")
+
       }
+
     }catch (err){
+
       setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login");
+
     }finally{
+
       setIsLoading(false);
+
     }
 
   }

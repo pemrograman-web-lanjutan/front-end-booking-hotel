@@ -16,7 +16,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { RoomsHotels } from "../data/cabang";
 
 export default function Hero() {
   const [adults, setAdults] = useState(1);
@@ -47,14 +46,6 @@ export default function Hero() {
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // search filter
-  const filteredCities = query
-    ? RoomsHotels.filter((city) =>
-        city.city.toLowerCase().includes(query.toLowerCase())
-      )
-    : RoomsHotels;
-
-  //
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -132,27 +123,6 @@ export default function Hero() {
                 />
               </div>
 
-              {showDropdown && (
-                <div className="absolute top-full mt-1 w-full bg-white border rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto">
-                  {filteredCities.length > 0 ? (
-                    filteredCities.map((city) => (
-                      <div
-                        key={city.id}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onMouseDown={() => {
-                          setQuery(city.city);
-                          setShowDropdown(false);
-                        }}>
-                        <div className="font-medium">{city.city}</div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-4 py-2 text-gray-500">
-                      Kota tidak ditemukan
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             <div className="flex flex-row items-center justify-between mt-4 space-x-4">

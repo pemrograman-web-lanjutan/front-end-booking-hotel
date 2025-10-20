@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {toast} from "react-hot-toast";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,8 +25,10 @@ export default function Navbar() {
     localStorage.removeItem("user");
 
     setIsLoggedIn(false);
-    
+
     router.push("/");
+    
+    toast.success("Logout berhasil");
   };
 
   return (
