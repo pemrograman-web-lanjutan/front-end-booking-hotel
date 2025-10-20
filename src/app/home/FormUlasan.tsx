@@ -14,70 +14,36 @@ export default function FormUlasan(user_id: number,  hotel_id: number) {
   const router = useRouter();
   const token = localStorage.getItem("token");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
+  console.log(token)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!token) {
 
-    try{
-      
+      toast.error("Silakan login terlebih dahulu!");
+
+      router.push("/auth/login");
+
+      return;
+    }
+
+    try {
       setLoading(true);
       const response = await SubmitUlasan(user_id, hotel_id, judul, deskripsi, rating);
 
-      if(!token){
-
-        router.push("/auth/login");
-
-        setTimeout(() => {
-          
-          toast.error("Silahkan login terlebih dahulu!", {
-            duration: 2000,
-            position: "top-right",
-          });
-
-        }, 500);
-
-        setLoading(false);
-
-        return;
-
+      if (response.status === 201 || response.status === 200) {
+        toast.success(response.message || "Ulasan berhasil dikirim");
+        router.push("/");
+      } else {
+        toast.error(response.message || "Terjadi kesalahan saat mengirim ulasan");
       }
-
-      if(response.status === 200){
-
-        router.push("/")
-
-        toast.success(response.message || "Ulasan berhasil dikirim", {
-          // duration: 2000,
-          position: "top-right",
-
-        });
-
-        setLoading(false);
-
-        return response;
-
-      }else{
-
-        toast.error(response.message || "Terjadi kesalahan saat mengirim ulasan", {
-          // duration: 2000,
-          position: "top-right",
-        });
-
-        setLoading(false);
-        return;
-      }
-
-    }catch (err){
-
-      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan saat mengirim ulasan", {
-        // duration: 2000,
-        position: "top-right",
-      });
-
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Terjadi kesalahan saat mengirim ulasan");
+    } finally {
+      setLoading(false);
     }
-
-  }
+  };
 
   const getHotel = async () => {
   
