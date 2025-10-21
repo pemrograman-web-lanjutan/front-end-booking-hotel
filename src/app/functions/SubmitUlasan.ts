@@ -1,5 +1,4 @@
 export async function SubmitUlasan(
-  user_id: number,
   hotel_id: number,
   judul: string,
   deskripsi: string,

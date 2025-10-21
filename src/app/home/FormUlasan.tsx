@@ -6,34 +6,35 @@ import { SubmitUlasan } from "@/app/functions/SubmitUlasan";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function FormUlasan(user_id: number, hotel_id: number) {
+export default function FormUlasan() {
   const [judul, setJudul] = useState<string>("");
   const [deskripsi, setDeskripsi] = useState<string>("");
   const [rating, setRating] = useState<number>(1);
+  const [selectedHotelId, setSelectedHotelId] = useState<number>(0);
+  const [hotel, setHotel] = useState<Hotel[]>([]);
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const token = localStorage.getItem("token");
-  const [loading, setLoading] = useState(false);
-  const [selectedHotelId, setSelectedHotelId] = useState<number>(0);
 
-  console.log(token);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!token) {
       toast.error("Silakan login terlebih dahulu!");
-
       router.push("/auth/login");
+      return;
+    }
 
+    if (selectedHotelId === 0) {
+      toast.error("Pilih hotel terlebih dahulu!");
       return;
     }
 
     try {
-      console.log("Token:", localStorage.getItem("token"));
-
       setLoading(true);
       const response = await SubmitUlasan(
-        user_id,
-        hotel_id,
+        selectedHotelId, // ✅ gunakan selectedHotelId, bukan hotel_id param
         judul,
         deskripsi,
         rating
@@ -43,15 +44,11 @@ export default function FormUlasan(user_id: number, hotel_id: number) {
         toast.success(response.message || "Ulasan berhasil dikirim");
         router.push("/");
       } else {
-        toast.error(
-          response.message || "Terjadi kesalahan saat mengirim ulasan"
-        );
+        toast.error(response.message || "Terjadi kesalahan saat mengirim ulasan");
       }
     } catch (err) {
       toast.error(
-        err instanceof Error
-          ? err.message
-          : "Terjadi kesalahan saat mengirim ulasan"
+        err instanceof Error ? err.message : "Terjadi kesalahan saat mengirim ulasan"
       );
     } finally {
       setLoading(false);
@@ -60,48 +57,36 @@ export default function FormUlasan(user_id: number, hotel_id: number) {
 
   const getHotel = async () => {
     const response = await fetch("http://127.0.0.1:8000/api/index/hotel");
-
     const data = await response.json();
-
     return data.data;
   };
 
-  const [hotel, setHotel] = useState<Hotel[]>([]);
-
   useEffect(() => {
     setLoading(true);
-
     getHotel()
-      .then((data) => {
-        setHotel(data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then((data) => setHotel(data))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <div className="p-5">
-      <form
-        onSubmit={handleSubmit}
-        method="post"
-        className="p-6 rounded-2xl shadow-md">
+      <form onSubmit={handleSubmit} method="post" className="p-6 rounded-2xl shadow-md">
         <h2 className="text-4xl text-[var(--primary)] font-semibold mb-4 text-center">
           Beri Ulasan
         </h2>
 
+        {/* PILIH HOTEL */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Pilih Hotel
           </label>
-
           <select
             disabled={loading}
             value={selectedHotelId}
             onChange={(e) => setSelectedHotelId(Number(e.target.value))}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
             <option value={0}>-- Pilih Hotel --</option>
-
             {loading ? (
               <option disabled>Loading...</option>
             ) : hotel && hotel.length > 0 ? (
@@ -116,10 +101,9 @@ export default function FormUlasan(user_id: number, hotel_id: number) {
           </select>
         </div>
 
+        {/* JUDUL */}
         <div className="mb-4">
-          <label
-            htmlFor="judul"
-            className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="judul" className="block text-sm font-medium text-gray-700 mb-1">
             Judul Ulasan
           </label>
           <input
@@ -133,10 +117,10 @@ export default function FormUlasan(user_id: number, hotel_id: number) {
             required
           />
         </div>
+
+        {/* DESKRIPSI */}
         <div className="mb-4">
-          <label
-            htmlFor="review"
-            className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="review" className="block text-sm font-medium text-gray-700 mb-1">
             Ulasan Anda
           </label>
           <textarea
@@ -146,32 +130,29 @@ export default function FormUlasan(user_id: number, hotel_id: number) {
             placeholder="Tulis ulasan Anda di sini..."
             required
             value={deskripsi}
-            onChange={(e) => setDeskripsi(e.target.value)}></textarea>
+            onChange={(e) => setDeskripsi(e.target.value)}
+          ></textarea>
         </div>
 
+        {/* RATING */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Rating
-          </label>
-
-          <div className="flex space-x-2">
-            <Rating
-              name="rating"
-              value={rating}
-              onChange={(_, newValue) => setRating(newValue || 1)}
-              size="large"
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+          <Rating
+            name="rating"
+            value={rating}
+            onChange={(_, newValue) => setRating(newValue || 1)}
+            size="large"
+          />
         </div>
 
+        {/* SUBMIT */}
         <button
           type="submit"
           disabled={loading}
           className={`w-full text-white py-2 px-4 rounded-lg transition ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed opacity-70"
-              : "bg-[var(--primary)]"
-          }`}>
+            loading ? "bg-gray-400 cursor-not-allowed opacity-70" : "bg-[var(--primary)]"
+          }`}
+        >
           {loading ? "Loading..." : "Kirim Ulasan"}
         </button>
       </form>
