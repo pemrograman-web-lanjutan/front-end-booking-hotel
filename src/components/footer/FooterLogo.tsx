@@ -10,7 +10,10 @@ export default function FooterLogo() {
         height={100}
         className="rounded-full"
       />
-      <p className="mt-4 text-gray-200">Hotel Oyo Ramah Keluarga</p>
+      <p className="mt-4 text-gray-200">
+        Hotel Inferno Ramah Keluarga adalah penginapan nyaman dengan suasana
+        hangat dan fasilitas lengkap, ideal untuk liburan bersama keluarga.
+      </p>
     </div>
   );
 }

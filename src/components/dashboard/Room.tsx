@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { RoomsHotels } from "../../app/data/cabang";
+
+interface Room {
+  id: string;
+  type: string;
+  bedType: string;
+  maxOccupancy: number;
+  amenities: string;
+  status: string;
+}
 
 const getStatusLabel = (status: string) => {
   switch (status) {
@@ -19,18 +27,32 @@ const getStatusLabel = (status: string) => {
 };
 
 export default function RoomsPage() {
-  const [rooms, setRooms] = useState(
-    RoomsHotels.flatMap((hotel) =>
-      hotel.rooms.map((room) => ({
-        id: `${hotel.id}-${room.id}`,
-        type: room.name,
-        bedType: room.options[0]?.bed || "-",
-        maxOccupancy: room.options[0]?.capacity || 0,
-        amenities: room.facilities.join(", "),
-        status: room.status,
-      }))
-    )
-  );
+  const [rooms, setRooms] = useState<Room[]>([
+    {
+      id: "1",
+      type: "Deluxe Room",
+      bedType: "Queen",
+      maxOccupancy: 2,
+      amenities: "WiFi, AC, TV, Shower",
+      status: "available",
+    },
+    {
+      id: "2",
+      type: "Suite Room",
+      bedType: "King",
+      maxOccupancy: 3,
+      amenities: "WiFi, AC, TV, Bathtub, Mini Bar",
+      status: "few_left",
+    },
+    {
+      id: "3",
+      type: "Standard Room",
+      bedType: "Twin",
+      maxOccupancy: 2,
+      amenities: "WiFi, AC, TV",
+      status: "fully_booked",
+    },
+  ]);
 
   const deleteRoom = (id: string) => {
     setRooms(rooms.filter((room) => room.id !== id));

@@ -8,7 +8,6 @@ export default function Dashboard() {
       <Sidebar />
       <div className="flex-1 p-6 overflow-y-auto">
         <Navbar />
-        {/* <Overview /> */}
         <BookingTable />
       </div>
     </div>

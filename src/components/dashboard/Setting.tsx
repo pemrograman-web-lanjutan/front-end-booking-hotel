@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { User as allUsers } from "../../app/data/users";
 
 export default function SettingsPage() {
   const [hotelName, setHotelName] = useState("Inferno Hotel");
@@ -9,16 +8,6 @@ export default function SettingsPage() {
   const [hotelPhone, setHotelPhone] = useState("+62 812 3456 7890");
   const [checkIn, setCheckIn] = useState("14:00");
   const [checkOut, setCheckOut] = useState("12:00");
-
-  const adminUsers = allUsers.filter(
-    (u) => u.role === "admin" || u.role === "superadmin"
-  );
-
-  const [users, setUsers] = useState(adminUsers);
-
-  const deleteUser = (id: number) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
 
   return (
     <div className="p-6 space-y-8">
@@ -89,20 +78,16 @@ export default function SettingsPage() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="border px-3 py-2">{user.fullname}</td>
-                <td className="border px-3 py-2">{user.email}</td>
-                <td className="border px-3 py-2 capitalize">{user.role}</td>
-                <td className="border px-3 py-2">
-                  <button
-                    onClick={() => deleteUser(user.id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded-md text-xs">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+            <tr className="hover:bg-gray-50">
+              <td className="border px-3 py-2">Admin</td>
+              <td className="border px-3 py-2">admin@gmail.com</td>
+              <td className="border px-3 py-2 capitalize">admin</td>
+              <td className="border px-3 py-2">
+                <button className="px-3 py-1 bg-red-600 text-white rounded-md text-xs">
+                  Delete
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
