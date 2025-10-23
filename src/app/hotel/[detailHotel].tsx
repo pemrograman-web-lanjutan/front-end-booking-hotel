@@ -6,7 +6,7 @@ export default function DetailHotel() {
   return (
     <section className="bg-[var(--primary)] px-6 py-12 md:px-12">
       <h2 className="text-2xl md:text-3xl text-white font-bold text-center my-10">
-        Hotel Inferno Cabang Apa?
+        Hotel Inferno Cabang Ubud
       </h2>
 
       {/* Grid utama */}
