@@ -28,12 +28,7 @@ const Sidebar = () => {
       key: "P",
     },
     { icon: Bed, label: "Rooms", href: "/dashboard/rooms", key: "R" },
-    {
-      icon: Home,
-      label: "Room Types",
-      href: "/dashboard/room-types",
-      key: "T",
-    },
+
     { icon: BarChart3, label: "Hotels", href: "/dashboard/hotels", key: "H" },
     { icon: FileText, label: "Reports", href: "/dashboard/reports", key: "R" },
     {

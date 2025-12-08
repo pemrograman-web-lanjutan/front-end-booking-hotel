@@ -1,15 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
-interface Room {
-  id: string;
-  type: string;
-  bedType: string;
-  maxOccupancy: number;
-  amenities: string;
-  status: string;
-}
+import RoomModal from "../modal/ModalFormRoom";
+import { Room } from "../../types/Room";
 
 const getStatusLabel = (status: string) => {
   switch (status) {
@@ -29,38 +22,64 @@ const getStatusLabel = (status: string) => {
 export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([
     {
-      id: "1",
-      type: "Deluxe Room",
+      roomId: "1",
+      roomType: "Deluxe Room",
       bedType: "Queen",
       maxOccupancy: 2,
       amenities: "WiFi, AC, TV, Shower",
       status: "available",
     },
     {
-      id: "2",
-      type: "Suite Room",
+      roomId: "2",
+      roomType: "Suite Room",
       bedType: "King",
       maxOccupancy: 3,
       amenities: "WiFi, AC, TV, Bathtub, Mini Bar",
-      status: "few_left",
+      status: "maintenance",
     },
     {
-      id: "3",
-      type: "Standard Room",
+      roomId: "3",
+      roomType: "Standard Room",
       bedType: "Twin",
       maxOccupancy: 2,
       amenities: "WiFi, AC, TV",
-      status: "fully_booked",
+      status: "occupied",
     },
   ]);
 
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleCreate = () => {
+    setSelectedRoom(null);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (room: Room) => {
+    setSelectedRoom(room);
+    setModalOpen(true);
+  };
+
+  const handleSubmit = (room: Room) => {
+    if (selectedRoom) {
+      setRooms(rooms.map((r) => (r.roomId === room.roomId ? room : r)));
+    } else {
+      setRooms([...rooms, room]);
+    }
+  };
+
   const deleteRoom = (id: string) => {
-    setRooms(rooms.filter((room) => room.id !== id));
+    setRooms(rooms.filter((room) => room.roomId !== id));
   };
 
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-4">Rooms</h2>
+      <button
+        onClick={handleCreate}
+        className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md">
+        Create Room
+      </button>
       <table className="w-full border-collapse border text-sm">
         <thead>
           <tr className="bg-gray-100">
@@ -77,9 +96,9 @@ export default function RoomsPage() {
           {rooms.map((room) => {
             const { label, color } = getStatusLabel(room.status);
             return (
-              <tr key={room.id} className="hover:bg-gray-50">
-                <td className="border px-3 py-2">{room.id}</td>
-                <td className="border px-3 py-2">{room.type}</td>
+              <tr key={room.roomId} className="hover:bg-gray-50">
+                <td className="border px-3 py-2">{room.roomId}</td>
+                <td className="border px-3 py-2">{room.roomType}</td>
                 <td className="border px-3 py-2">{room.bedType}</td>
                 <td className="border px-3 py-2">{room.maxOccupancy}</td>
                 <td className="border px-3 py-2">{room.amenities}</td>
@@ -87,11 +106,13 @@ export default function RoomsPage() {
                   {label}
                 </td>
                 <td className="border px-3 py-2 text-center">
-                  <button className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
+                  <button
+                    onClick={() => handleEdit(room)}
+                    className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteRoom(room.id)}
+                    onClick={() => deleteRoom(room.roomId)}
                     className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
                     Delete
                   </button>
@@ -101,6 +122,13 @@ export default function RoomsPage() {
           })}
         </tbody>
       </table>
+
+      <RoomModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleSubmit}
+        initialData={selectedRoom}
+      />
     </div>
   );
 }
