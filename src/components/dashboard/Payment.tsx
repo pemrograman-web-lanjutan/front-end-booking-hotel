@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PaymentModal from "../modal/ModalFormPayment";
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState([
@@ -23,6 +24,19 @@ export default function PaymentsPage() {
       date: "2025-09-19",
     },
   ]);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  useState<any>(null);
+
+  const handleEdit = (payment: any) => {
+    setSelectedPayment(payment);
+    setModalOpen(true);
+  };
+
+  const handleUpdate = (updated: any) => {
+    setPayments((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+  };
 
   const deletePayment = (id: number) => {
     setPayments(payments.filter((p) => p.id !== id));
@@ -66,7 +80,13 @@ export default function PaymentsPage() {
               </td>
               <td className="border px-3 py-2">{p.transactionId}</td>
               <td className="border px-3 py-2">{p.date}</td>
-              <td className="border px-3 py-2 text-center">
+
+              <td className="border px-3 py-2 text-center flex gap-2">
+                <button
+                  onClick={() => handleEdit(payments)}
+                  className="px-3 py-1 bg-blue-600 text-white rounded-md text-xs">
+                  Edit
+                </button>
                 <button
                   onClick={() => deletePayment(p.id)}
                   className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
@@ -77,6 +97,15 @@ export default function PaymentsPage() {
           ))}
         </tbody>
       </table>
+
+      {modalOpen && (
+        <PaymentModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleUpdate}
+          initialData={selectedPayment}
+        />
+      )}
     </div>
   );
 }

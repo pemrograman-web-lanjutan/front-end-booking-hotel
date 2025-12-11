@@ -1,5 +1,5 @@
 "use client";
-import HotelBookingReport from "../../../components/dashboard/hotels";
+import HotelBookingReport from "../../../components/dashboard/reports";
 import Navbar from "../../../components/dashboard/Navbar";
 import Sidebar from "../../../components/dashboard/Sidebar";
 
