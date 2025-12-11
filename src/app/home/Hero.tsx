@@ -18,12 +18,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Hero() {
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
-  const [rooms, setRooms] = useState(1);
   const [open, setOpen] = useState(false);
 
-  const toggleDropdown = () => setOpen(!open);
+  const [jumlahTamu, setJumlahTamu] = useState(1);
 
   const [checkIn, setCheckIn] = useState(
     new Date().toISOString().split("T")[0]
@@ -44,7 +41,6 @@ export default function Hero() {
 
   const [query, setQuery] = useState("");
   const router = useRouter();
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,20 +103,24 @@ export default function Hero() {
 
       <div className="flex justify-center -mt-10 relative z-10">
         <div className="bg-gray-200 p-6 rounded-2xl shadow-md w-full max-w-4xl">
-          <form onSubmit={handleSearch} className="items-end">
+          <form onSubmit={handleSearch} className="items-end" method="post">
             <div className="relative flex flex-col">
               <label className="text-sm text-gray-600 mb-1">Kota Tujuan</label>
               <div className="relative w-full">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onFocus={() => setShowDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                  placeholder="Kota tujuan"
-                  className="w-full p-3 pl-10 rounded-xl border border-gray-400 focus:ring-2 focus:ring-[var(--primary)] outline-none"
-                />
+                <select name="kota_tujuan" value={query} id="" onChange={(e) => setQuery(e.target.value)} className="w-full p-3 pl-10 rounded-xl border border-gray-400 focus:ring-2 focus:ring-[var(--primary)] outline-none cursor-pointer">
+                  <option value="" disabled>-- Pilih Kota Tujuan --</option>
+                  <option value="Badung">Badung</option>
+                  <option value="Gianyar">Gianyar</option>
+                  <option value="Denpasar">Denpasar</option>
+                  <option value="Tabanan">Tabanan</option>
+                  <option value="Karangasem">Karangasem</option>
+                  <option value="Bangli">Bangli</option>
+                  <option value="Buleleng">Buleleng</option>
+                  <option value="Klungkung">Klungkung</option>
+                  <option value="Jembrana">Jembrana</option>
+                  <option value="Nusa Penida">Nusa Penida</option>
+                </select>
               </div>
 
             </div>
@@ -132,9 +132,11 @@ export default function Hero() {
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                   <input
                     type="date"
+                    name="checkin"
                     value={checkIn}
                     onChange={(e) => setCheckIn(e.target.value)}
                     className="w-full p-3 pl-10 rounded-xl border border-gray-400 focus:ring-2 focus:ring-[var(--primary)] outline-none"
+                    
                   />
                 </div>
               </div>
@@ -144,6 +146,7 @@ export default function Hero() {
                 <div className="relative">
                   <Moon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                   <select
+                    name="duration"
                     value={duration}
                     onChange={(e) => setDuration(Number(e.target.value))}
                     className="w-full p-3 pl-10 rounded-xl border border-gray-400 focus:ring-2 focus:ring-[var(--primary)] outline-none">
@@ -165,103 +168,28 @@ export default function Hero() {
                   value={checkOut}
                   disabled
                   className="w-full p-3 rounded-xl border border-gray-400 bg-gray-100 text-gray-700"
+                  name="checkout"
                 />
               </div>
             </div>
 
             <div className="flex flex-col md:col-span-3 relative">
               <label className="text-sm text-gray-600 mb-1">
-                Tamu dan Kamar
+                Jumlah Tamu
               </label>
               <div className="relative">
                 <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                 <input
-                  type="text"
-                  readOnly
-                  value={`${adults} Dewasa, ${children} Anak, ${rooms} Kamar`}
-                  onClick={toggleDropdown}
+                  type="number"
+                  value={jumlahTamu}
+                  onChange={(e) => setJumlahTamu(Number(e.target.value))}
+                  min={1}
+                  max={4}
+                  name="jumlah_tamu"
                   className="w-full p-3 pl-10 rounded-xl border border-gray-400 cursor-pointer"
+                  placeholder="Jumlah Tamu"
                 />
               </div>
-
-              {open && (
-                <div className="absolute z-20 mt-17 w-full bg-white shadow-lg rounded-xl border border-gray-200 p-4 space-y-4">
-                  {/* Dewasa */}
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-gray-600" /> Dewasa
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="p-1 rounded border disabled:opacity-30"
-                        onClick={() => setAdults(Math.max(1, adults - 1))}
-                        disabled={adults <= 1}>
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span>{adults}</span>
-                      <button
-                        type="button"
-                        className="p-1 rounded border"
-                        onClick={() => setAdults(adults + 1)}>
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Anak */}
-                  <div className="flex justify-between items-center">
-                    <span>Anak</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="p-1 rounded border disabled:opacity-30"
-                        onClick={() => setChildren(Math.max(0, children - 1))}
-                        disabled={children <= 0}>
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span>{children}</span>
-                      <button
-                        type="button"
-                        className="p-1 rounded border"
-                        onClick={() => setChildren(children + 1)}>
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Kamar */}
-                  <div className="flex justify-between items-center">
-                    <span>Kamar</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="p-1 rounded border disabled:opacity-30"
-                        onClick={() => setRooms(Math.max(1, rooms - 1))}
-                        disabled={rooms <= 1}>
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span>{rooms}</span>
-                      <button
-                        type="button"
-                        className="p-1 rounded border"
-                        onClick={() => setRooms(rooms + 1)}>
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Tombol selesai */}
-                  <div className="text-right">
-                    <button
-                      type="button"
-                      className="text-blue-600 font-medium"
-                      onClick={() => setOpen(false)}>
-                      Selesai
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
             <div className="flex justify-end mt-4">
               <button

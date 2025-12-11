@@ -1,7 +1,10 @@
 "use client";
 import RoomsPages from "../hotel/[rooms]";
 
-export default function RoomsPage() {
+export default async function RoomsPage() {
+
+  const data = await fetch("")
+
   return (
     <div>
       <RoomsPages />
