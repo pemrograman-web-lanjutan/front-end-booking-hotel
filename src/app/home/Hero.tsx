@@ -30,16 +30,24 @@ export default function Hero() {
   );
   const [duration, setDuration] = useState(1);
   const [checkOut, setCheckOut] = useState("");
+  const [checkOutDisplay, setCheckOutDisplay] = useState("");
+
   useEffect(() => {
     const inDate = new Date(checkIn);
     inDate.setDate(inDate.getDate() + duration);
+
+    // Format ISO untuk input date
+    const isoFormat = inDate.toISOString().split("T")[0];
+    setCheckOut(isoFormat);
+
+    // Format tampilan
     const options: Intl.DateTimeFormatOptions = {
       weekday: "short",
       day: "2-digit",
       month: "short",
       year: "numeric",
     };
-    setCheckOut(inDate.toLocaleDateString("id-ID", options));
+    setCheckOutDisplay(inDate.toLocaleDateString("id-ID", options));
   }, [checkIn, duration]);
 
   const [query, setQuery] = useState("");
@@ -122,7 +130,6 @@ export default function Hero() {
                   className="w-full p-3 pl-10 rounded-xl border border-gray-400 focus:ring-2 focus:ring-[var(--primary)] outline-none"
                 />
               </div>
-
             </div>
 
             <div className="flex flex-row items-center justify-between mt-4 space-x-4">
@@ -161,7 +168,7 @@ export default function Hero() {
                   Check-Out :
                 </label>
                 <input
-                  type="text"
+                  type="date"
                   value={checkOut}
                   disabled
                   className="w-full p-3 rounded-xl border border-gray-400 bg-gray-100 text-gray-700"
@@ -186,7 +193,6 @@ export default function Hero() {
 
               {open && (
                 <div className="absolute z-20 mt-17 w-full bg-white shadow-lg rounded-xl border border-gray-200 p-4 space-y-4">
-                  {/* Dewasa */}
                   <div className="flex justify-between items-center">
                     <span className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-gray-600" /> Dewasa
