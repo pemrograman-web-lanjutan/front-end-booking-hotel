@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
+import { Navbar } from "@/components/Navbar";
 
 import { Playfair_Display, Inter } from "next/font/google";
 
@@ -36,7 +37,6 @@ export default function RootLayout({
       <body className={`${playfair.variable} ${inter.variable}`}>
         {children}
         <Toaster />
-
         <Script id="chatbase-config" strategy="afterInteractive">
           {`
             window.CHATBASE_CONFIG = {

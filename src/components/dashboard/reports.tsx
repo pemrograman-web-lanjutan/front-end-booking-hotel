@@ -103,11 +103,11 @@ export default function HotelBookingReport() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat, index) => {
+          {stats.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
-                key={index}
+                key={stat.title}
                 className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-gray-600 text-sm font-medium">
@@ -210,10 +210,10 @@ export default function HotelBookingReport() {
               Bookings by Room Type
             </h2>
             <div className="space-y-4">
-              {roomTypes.map((room, index) => {
+              {roomTypes.map((room) => {
                 const maxRoomValue = Math.max(...roomTypes.map((r) => r.value));
                 return (
-                  <div key={index}>
+                  <div key={room.name}>
                     <div className="flex justify-between mb-2">
                       <span className="text-sm font-medium text-gray-700">
                         {room.name}
@@ -241,8 +241,8 @@ export default function HotelBookingReport() {
               Bookings by Source
             </h2>
             <div className="space-y-4 mt-8">
-              {bookingSources.map((source, index) => (
-                <div key={index} className="space-y-2">
+              {bookingSources.map((source) => (
+                <div key={source.name} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div
