@@ -7,7 +7,7 @@ import HotelModal from "../modal/ModalFormHotels";
 export default function HotelsPages() {
   const [hotels, setHotels] = useState<Hotel[]>([
     {
-      id: 1,
+      hotel_id: 1,
       nama_hotel: "Hotel Inferno Denpasar",
       cabang_hotel: "Denpasar",
       alamat_hotel: "Jl. Gatot Subroto No. 45, Denpasar",
@@ -16,7 +16,7 @@ export default function HotelsPages() {
       // rating: 4.5,
     },
     {
-      id: 2,
+      hotel_id: 2,
       nama_hotel: "Hotel Inferno Badung",
       cabang_hotel: "Badung",
       alamat_hotel: "Jl. Raya Kuta No. 12, Badung",
@@ -39,14 +39,14 @@ export default function HotelsPages() {
 
   const handleSubmit = (hotel: Hotel) => {
     if (selectedHotel) {
-      setHotels(hotels.map((r) => (r.id === hotel.id ? hotel : r)));
+      setHotels(hotels.map((r) => (r.hotel_id === hotel.hotel_id ? hotel : r)));
     } else {
       setHotels([...hotels, hotel]);
     }
   };
 
   const deleteHotel = (id: number) => {
-    setHotels(hotels.filter((hotel) => hotel.id !== id));
+    setHotels(hotels.filter((hotel) => hotel.hotel_id !== id));
   };
 
   return (
@@ -71,7 +71,7 @@ export default function HotelsPages() {
         </thead>
         <tbody>
           {hotels.map((hotel) => (
-            <tr key={hotel.id} className="hover:bg-gray-50">
+            <tr key={hotel.hotel_id} className="hover:bg-gray-50">
               <td className="border px-3 py-2 font-medium">
                 {hotel.nama_hotel}
               </td>
@@ -90,7 +90,7 @@ export default function HotelsPages() {
                   Edit
                 </button>
                 <button
-                  onClick={() => deleteHotel(hotel.id)}
+                  onClick={() => deleteHotel(hotel.hotel_id)}
                   className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
                   Delete
                 </button>

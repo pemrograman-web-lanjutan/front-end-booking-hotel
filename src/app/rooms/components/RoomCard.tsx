@@ -1,15 +1,13 @@
 import Image from "next/image";
 import { RoomFilter } from "@/types/Room";
-import {Link} from "next/link";
 
 interface RoomCardProps {
   room: RoomFilter;
 }
 
 export default function RoomCard({ room }: RoomCardProps) {
-
   return (
-    <div className="border rounded-xl shadow-md overflow-hidden bg-white" >
+    <div className="border rounded-xl shadow-md overflow-hidden bg-white">
       <div className="relative w-full h-48">
         <Image
           src={"/hotel/canggu-1.png"}
@@ -31,6 +29,5 @@ export default function RoomCard({ room }: RoomCardProps) {
         </div>
       </div>
     </div>
-
   );
 }

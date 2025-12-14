@@ -15,10 +15,12 @@ export default function RoomsPage() {
   }, [searchRooms]);
 
   return (
-    <div>
+    <div className="bg-[var(--primary)]">
       <Navbar />
-      <div className="px-6 pt-[6rem]">
-        <h1 className="text-3xl font-bold mb-6">Daftar Kamar</h1>
+      <div className="px-6 pt-[6rem] pb-6">
+        <h1 className="text-[var(--secondary)] text-3xl font-bold mb-6">
+          Daftar Kamar
+        </h1>
 
         {/* SEARCH FORM */}
         <SearchForm />

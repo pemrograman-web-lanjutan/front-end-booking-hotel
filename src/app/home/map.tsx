@@ -97,7 +97,7 @@ export default function GoogleMapHotels() {
 
   return (
     <div className="bg-[var(--primary)]">
-      <div className="px-4 py-10 sm:px-8 md:px-16 lg:px-20 lg:py-20 my-10 sm:my-16 lg:my-20">
+      <div className="px-4 py-10 sm:px-8 md:px-16 lg:px-20">
         <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!}>
           <GoogleMap
             mapContainerStyle={containerStyle}
