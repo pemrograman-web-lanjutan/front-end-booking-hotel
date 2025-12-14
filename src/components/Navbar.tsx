@@ -2,9 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,13 +13,11 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in by looking for token in localStorage
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
   const handleLogout = () => {
-
     localStorage.removeItem("token");
 
     localStorage.removeItem("user");
@@ -27,12 +25,12 @@ export default function Navbar() {
     setIsLoggedIn(false);
 
     router.push("/");
-    
+
     toast.success("Logout berhasil");
   };
 
   return (
-    <nav className="flex justify-between items-center bg-white px-6 py-4 shadow fixed w-full z-20">
+    <nav className="flex justify-between items-center bg-[var(--third)] px-6 py-4 shadow fixed w-full z-20">
       <div className="flex items-center space-x-2">
         <Image src={"/logo/Asset-5.png"} width={150} height={150} alt="logo" />
       </div>
@@ -63,6 +61,15 @@ export default function Navbar() {
             </button>
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                {/* Tombol: Histori Booking */}
+                <button
+                  onClick={() => router.push("/history")}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Histori Booking
+                </button>
+
+                {/* Tombol: Logout */}
                 <button
                   onClick={handleLogout}
                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">

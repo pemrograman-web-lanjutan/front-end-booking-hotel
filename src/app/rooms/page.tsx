@@ -5,6 +5,7 @@ import RoomCard from "@/app/rooms/components/RoomCard";
 import SearchForm from "@/app/rooms/components/SearchForm";
 import { useRoomsStore } from "@/store/useRoomsStore";
 import Navbar from "@/components/Navbar";
+import RoomsPages from "../hotel/[id]/[rooms]";
 
 export default function RoomsPage() {
   const { rooms, loading, error, searchRooms } = useRoomsStore();
@@ -15,7 +16,7 @@ export default function RoomsPage() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="px-6 pt-[6rem]">
         <h1 className="text-3xl font-bold mb-6">Daftar Kamar</h1>
 
@@ -24,7 +25,9 @@ export default function RoomsPage() {
 
         {loading && <div className="text-center py-10">Mencari kamar...</div>}
 
-        {error && <p className="text-center text-red-500 py-10">Error: {error}</p>}
+        {error && (
+          <p className="text-center text-red-500 py-10">Error: {error}</p>
+        )}
 
         {!loading && !error && rooms.length === 0 && (
           <p className="text-center text-gray-500 py-10">
@@ -39,7 +42,6 @@ export default function RoomsPage() {
           ))}
         </div>
       </div>
-
     </div>
   );
 }
