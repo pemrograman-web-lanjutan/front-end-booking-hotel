@@ -11,6 +11,13 @@ export interface RoomFilter {
   amenities: string,
 }
 
+export interface RoomType {
+  id: number;
+  name: string;
+  price: number; // or price_per_night
+  price_per_night?: number; // handle both naming conventions
+}
+
 export interface RoomDetail {
   id: number;
   id_rooms_type: number;
@@ -18,5 +25,6 @@ export interface RoomDetail {
   room_number: string;
   nama_hotel: string;
   status: "maintenance" | "occupied" | "available";
-  price_per_night: number;
+  price_per_night?: number; // keep for backward compatibility
+  room_type?: RoomType; // relation
 }

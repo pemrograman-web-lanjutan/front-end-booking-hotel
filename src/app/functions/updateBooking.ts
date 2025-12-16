@@ -17,8 +17,21 @@ export async function updateBooking(id: string, bookingData: Partial<Booking>): 
 
         if (!res.ok) {
             const errorText = await res.text();
-            console.error("Failed to update booking:", res.status, res.statusText, errorText);
-            return null;
+            let errorMessage = res.statusText;
+
+            try {
+                // Try to parse the error as JSON
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.message || errorJson.error || errorMessage;
+            } catch (e) {
+                // If not JSON, use the raw text if available
+                if (errorText) {
+                    errorMessage = errorText;
+                }
+            }
+
+            console.error("Failed to update booking:", res.status, res.statusText, errorMessage);
+            throw new Error(errorMessage);
         }
 
         const json = await res.json();
@@ -36,6 +49,6 @@ export async function updateBooking(id: string, bookingData: Partial<Booking>): 
         return json;
     } catch (error) {
         console.error("Error updating booking:", error);
-        return null;
+        throw error;
     }
 }

@@ -84,8 +84,20 @@ export default function BookingModal({
       let totalAmount = 0;
       if (form.room_id) {
         const selectedRoom = rooms.find(r => r.id.toString() === form.room_id.toString());
-        if (selectedRoom && selectedRoom.price_per_night) {
-          totalAmount = selectedRoom.price_per_night * form.total_nights;
+
+        // Cek price di root object atau di dalam relation room_type
+        let price = 0;
+        if (selectedRoom) {
+          const rawPrice = selectedRoom.price_per_night ||
+            selectedRoom.room_type?.price ||
+            selectedRoom.room_type?.price_per_night ||
+            0;
+
+          price = Number(rawPrice);
+        }
+
+        if (price > 0) {
+          totalAmount = price * form.total_nights;
         }
       }
 
@@ -159,9 +171,9 @@ export default function BookingModal({
           alert("Gagal menambahkan booking. Silakan coba lagi.");
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting booking:", error);
-      alert("Terjadi kesalahan. Silakan coba lagi.");
+      alert(error.message || "Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);
     }

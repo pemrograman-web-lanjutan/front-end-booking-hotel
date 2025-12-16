@@ -2,7 +2,7 @@ import { RoomDetail } from '@/types/Room';
 
 export async function getRooms(): Promise<RoomDetail[]> {
     try {
-        const res = await fetch("http://localhost:8000/api/rooms/room-and-hotel", {
+        const res = await fetch("http://localhost:8000/api/room-and-hotel", {
             cache: "no-store",
             headers: {
                 "Content-Type": "application/json",

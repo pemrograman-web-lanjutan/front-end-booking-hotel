@@ -3,6 +3,15 @@ import { Booking } from "@/types/booking";
 export async function addBooking(bookingData: Omit<Booking, 'id' | 'booking_date' | 'cancellation_date'>): Promise<Booking | null> {
     try {
         const token = localStorage.getItem("token");
+        const userStr = localStorage.getItem("user");
+
+        console.log("Debug Auth - Token:", token ? "Present" : "Missing");
+        console.log("Debug Auth - User:", userStr);
+
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            console.log("Debug Auth - Role:", user.role);
+        }
 
         const res = await fetch("http://localhost:8000/api/bookings", {
             method: "POST",

@@ -27,7 +27,7 @@ export async function handleLogin(email: string, password: string) {
                 email,
                 password
             })
-            
+
         });
 
         const data = await response.json();
@@ -134,7 +134,7 @@ export async function handleRegister(fullname: string, email: string, phone: str
         if (error instanceof Error) {
             throw error;
         }
-        
+
         throw new Error("Terjadi kesalahan saat menghubungi server");
     }
 }
