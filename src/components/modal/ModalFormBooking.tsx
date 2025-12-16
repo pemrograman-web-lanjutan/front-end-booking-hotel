@@ -32,7 +32,7 @@ export default function BookingModal({
     total_amount: 0,
     payment_status: "pending",
     booking_date: "",
-    total_nights: 1
+    total_nights: 1,
   });
 
   const [users, setUsers] = useState<Users[]>([]);
@@ -58,7 +58,7 @@ export default function BookingModal({
         total_amount: 0,
         payment_status: "pending",
         booking_date: "",
-        total_nights: 1
+        total_nights: 1,
       });
     }
   }, [initialData, open]);
@@ -67,7 +67,7 @@ export default function BookingModal({
   useEffect(() => {
     if (form.check_in && form.total_nights > 0) {
       // Parse date string to avoid timezone issues
-      const [year, month, day] = form.check_in.split('-').map(Number);
+      const [year, month, day] = form.check_in.split("-").map(Number);
       const checkInDate = new Date(year, month - 1, day); // month is 0-indexed
 
       // Add total_nights to get checkout date
@@ -76,19 +76,22 @@ export default function BookingModal({
 
       // Format to YYYY-MM-DD
       const yyyy = checkOutDate.getFullYear();
-      const mm = String(checkOutDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(checkOutDate.getDate()).padStart(2, '0');
+      const mm = String(checkOutDate.getMonth() + 1).padStart(2, "0");
+      const dd = String(checkOutDate.getDate()).padStart(2, "0");
       const formattedCheckOut = `${yyyy}-${mm}-${dd}`;
 
       // Calculate total amount
       let totalAmount = 0;
       if (form.room_id) {
-        const selectedRoom = rooms.find(r => r.id.toString() === form.room_id.toString());
+        const selectedRoom = rooms.find(
+          (r) => r.id.toString() === form.room_id.toString()
+        );
 
         // Cek price di root object atau di dalam relation room_type
         let price = 0;
         if (selectedRoom) {
-          const rawPrice = selectedRoom.price_per_night ||
+          const rawPrice =
+            selectedRoom.price_per_night ||
             selectedRoom.room_type?.price ||
             selectedRoom.room_type?.price_per_night ||
             0;
@@ -104,7 +107,7 @@ export default function BookingModal({
       setForm((prev) => ({
         ...prev,
         check_out: formattedCheckOut,
-        total_amount: totalAmount
+        total_amount: totalAmount,
       }));
     }
   }, [form.check_in, form.total_nights, form.room_id, rooms]);
@@ -128,7 +131,7 @@ export default function BookingModal({
     };
 
     fetchRooms();
-  }, [])
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -137,7 +140,7 @@ export default function BookingModal({
 
     setForm((prev) => ({
       ...prev,
-      [name]: name === 'total_nights' ? Number(value) : value,
+      [name]: name === "total_nights" ? Number(value) : value,
     }));
   };
 
@@ -191,16 +194,13 @@ export default function BookingModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Nama Tamu */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Nama Tamu
-            </label>
+            <label className="block text-sm font-medium mb-1">Nama Tamu</label>
             <select
               name="user_id"
               value={form.user_id}
               onChange={handleChange}
               className="w-full border p-2 rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
-              required
-            >
+              required>
               <option value="" disabled>
                 {loadingUsers ? "Loading..." : "--- Pilih Nama Tamu ---"}
               </option>
@@ -214,16 +214,13 @@ export default function BookingModal({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Kamar
-            </label>
+            <label className="block text-sm font-medium mb-1">Kamar</label>
             <select
               name="room_id"
               value={form.room_id}
               onChange={handleChange}
               className="w-full border p-2 rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
-              required
-            >
+              required>
               <option value="" disabled>
                 {loadingRooms ? "Loading..." : "--- Pilih Kamar ---"}
               </option>
@@ -269,7 +266,6 @@ export default function BookingModal({
           </div>
 
           <div className="flex gap-4 items-center justify-between">
-
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">
                 Status Booking
@@ -278,9 +274,8 @@ export default function BookingModal({
                 name="booking_status"
                 value={form.booking_status}
                 onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                <option value="pending" selected>Pending</option>
+                className="w-full border p-2 rounded">
+                <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
                 <option value="cancelled">Cancelled</option>
                 <option value="completed">Completed</option>
@@ -296,9 +291,10 @@ export default function BookingModal({
                 name="payment_status"
                 value={form.payment_status}
                 onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                <option value="pending" selected>Pending</option>
+                className="w-full border p-2 rounded">
+                <option value="pending" selected>
+                  Pending
+                </option>
                 <option value="paid">Paid</option>
                 <option value="refunded">Refunded</option>
               </select>
@@ -307,16 +303,31 @@ export default function BookingModal({
           {/* Status Booking */}
 
           <div>
-            <label htmlFor="" className="block text-sm font-medium mb-1">Total Nights</label>
+            <label htmlFor="" className="block text-sm font-medium mb-1">
+              Total Nights
+            </label>
 
-            <input type="number" name="total_nights" value={form.total_nights} onChange={handleChange} className="w-full border p-2 rounded" min={1} max={4} />
+            <input
+              type="number"
+              name="total_nights"
+              value={form.total_nights}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+              min={1}
+              max={4}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Total Amount (Auto-calculated)</label>
+            <label className="block text-sm font-medium mb-1">
+              Total Amount (Auto-calculated)
+            </label>
             <input
               type="text"
-              value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(form.total_amount)}
+              value={new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              }).format(form.total_amount)}
               className="w-full border p-2 rounded bg-gray-100"
               readOnly
             />
@@ -327,18 +338,18 @@ export default function BookingModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border rounded"
-            >
+              className="px-4 py-2 border rounded">
               Cancel
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded disabled:bg-blue-400 disabled:cursor-not-allowed"
-              disabled={isSubmitting}
-            >
+              disabled={isSubmitting}>
               {isSubmitting
                 ? "Processing..."
-                : initialData ? "Update Booking" : "Create Booking"}
+                : initialData
+                ? "Update Booking"
+                : "Create Booking"}
             </button>
           </div>
         </form>
