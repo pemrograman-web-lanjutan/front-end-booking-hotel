@@ -38,6 +38,10 @@ export async function handleLogin(email: string, password: string) {
 
             localStorage.setItem("token", data.token);
 
+            // Set cookie for middleware
+            const expiresIn = 7 * 24 * 60 * 60; // 7 days
+            document.cookie = `token=${data.token}; path=/; max-age=${expiresIn}; SameSite=Strict`;
+
             toast.success("Login berhasil", {
                 duration: 3000,
                 position: "top-right",

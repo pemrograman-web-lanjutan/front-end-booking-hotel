@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 interface BookingFormUIProps {
   open: boolean;
@@ -42,6 +43,7 @@ export default function BookingForm({ open, onClose, roomId }: BookingFormUIProp
     if (!localStorage.getItem("token")) {
       localStorage.setItem("pendingBooking", JSON.stringify(form));
       router.push("/auth/login");
+      toast.error("Silakan login terlebih dahulu untuk melakukan booking.");
       return;
     }
 
@@ -95,7 +97,7 @@ export default function BookingForm({ open, onClose, roomId }: BookingFormUIProp
               value={form.nama_lengkap}
               onChange={handleChange}
               placeholder="Masukkan nama lengkap"
-              className="border p-2 rounded-lg w-full mt-1"
+              className="border p-2 rounded-lg w-full mt-1 placeholder:text-gray-900"
               required
             />
           </div>

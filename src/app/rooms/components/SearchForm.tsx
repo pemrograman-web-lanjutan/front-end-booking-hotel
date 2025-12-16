@@ -13,12 +13,12 @@ import { useRoomsStore } from "@/store/useRoomsStore";
 export default function SearchForm() {
   const { filters, setFilters, searchRooms } = useRoomsStore();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters({ [name]: value });
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent ) => {
     e.preventDefault();
     searchRooms();
   };
@@ -39,7 +39,7 @@ export default function SearchForm() {
                 <option value="" disabled>
                   -- Pilih Kota Tujuan --
                 </option>
-                <option value={filters.kota_tujuan || ""} selected>
+                <option value={filters.kota_tujuan || ""} defaultValue="">
                   {filters.kota_tujuan}
                 </option>
                 <option value="Badung">Badung</option>

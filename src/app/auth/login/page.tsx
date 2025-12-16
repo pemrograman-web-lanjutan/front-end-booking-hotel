@@ -1,17 +1,47 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { handleLogin } from "@/app/auth/handleSubmit";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function Login() {
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/';
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const submitPendingBooking = async (bookingData: any) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (response.ok) {
+        toast.success("Booking berhasil dikirim!", { duration: 3000 });
+        localStorage.removeItem("pendingBooking");
+      } else {
+        toast.error("Booking gagal!", { duration: 3000 });
+      }
+    } catch (error) {
+      toast.error("Error saat booking: " + error, { duration: 3000 });
+    }
+  };
+
+  const setTokenCookie = (token: string) => {
+    document.cookie = `token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+  };
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
@@ -22,13 +52,23 @@ export default function Login() {
     try{
       const data = await handleLogin(email, password);
 
+      // Set token as cookie for middleware
+      setTokenCookie(data.token);
+
+      // Check for pending booking
+      const pendingBooking = localStorage.getItem("pendingBooking");
+      if (pendingBooking) {
+        const bookingData = JSON.parse(pendingBooking);
+        await submitPendingBooking(bookingData);
+      }
+
       if(data.user.role === "admin"){
         
-        router.push("/dashboard");
+        router.push(redirectPath === '/' ? "/dashboard" : redirectPath);
 
       }else{
 
-        router.push("/")
+        router.push(redirectPath);
 
       }
 

@@ -1,3 +1,5 @@
+"use client";
+
 export async function SubmitUlasan(
   hotel_id: number,
   judul: string,

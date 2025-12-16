@@ -30,10 +30,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="flex justify-between items-center bg-[var(--third)] px-6 py-4 shadow fixed w-full z-20">
-      <div className="flex items-center space-x-2">
+    <nav className="flex justify-between items-center bg-white px-6 py-4 shadow fixed w-full z-20">
+      <Link href={"/"} className="flex items-center space-x-2">
         <Image src={"/logo/Asset-5.png"} width={150} height={150} alt="logo" />
-      </div>
+      </Link>
 
       {/* Menu Desktop */}
       <div className="hidden md:flex space-x-6 justify-center items-center">
