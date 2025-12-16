@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const pageTitles: Record<string, string> = {
     "/dashboard": "Dashboard",
@@ -19,13 +20,13 @@ export default function Navbar() {
 
   const currentTitle = pageTitles[pathname] || "Dashboard";
 
-  const router = useRouter();
-
   const handleLogout = () => {
-    alert("Keluar dari sistem");
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
     router.push("/");
   };
-
   return (
     <div className="w-full flex items-center justify-between bg-white px-6 py-3">
       <h1 className="text-lg font-semibold">Welcome to {currentTitle}</h1>
