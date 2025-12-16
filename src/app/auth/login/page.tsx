@@ -7,11 +7,10 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 
 export default function Login() {
-
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/';
-  
+  const redirectPath = searchParams.get("redirect") || "/";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -19,11 +18,11 @@ export default function Login() {
 
   const submitPendingBooking = async (bookingData: any) => {
     try {
-      const response = await fetch('http://localhost:8000/api/booking', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/booking", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(bookingData),
       });
@@ -40,17 +39,21 @@ export default function Login() {
   };
 
   const setTokenCookie = (token: string) => {
-    document.cookie = `token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Strict`;
+    document.cookie = `token=${token}; path=/; max-age=${
+      7 * 24 * 60 * 60
+    }; SameSite=Strict`;
   };
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
-    try{
+    try {
       const data = await handleLogin(email, password);
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       // Set token as cookie for middleware
       setTokenCookie(data.token);
@@ -62,28 +65,19 @@ export default function Login() {
         await submitPendingBooking(bookingData);
       }
 
-      if(data.user.role === "admin"){
-        
-        router.push(redirectPath === '/' ? "/dashboard" : redirectPath);
-
-      }else{
-
+      if (data.user.role === "admin") {
+        router.push(redirectPath === "/" ? "/dashboard" : redirectPath);
+      } else {
         router.push(redirectPath);
-
       }
-
-    }catch (err){
-
-      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat login");
-
-    }finally{
-
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Terjadi kesalahan saat login"
+      );
+    } finally {
       setIsLoading(false);
-
     }
-
-  }
-
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
