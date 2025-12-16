@@ -15,6 +15,7 @@ export default function BookingTable({ bookings, onRefresh }: BookingTableProps)
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Ensure bookings is always an array
   const safeBookings = Array.isArray(bookings) ? bookings : [];
@@ -43,15 +44,24 @@ export default function BookingTable({ bookings, onRefresh }: BookingTableProps)
       return;
     }
 
-    const success = await deleteBooking(id);
-    if (success) {
-      alert("Booking berhasil dihapus!");
-      // Refresh data setelah delete
-      if (onRefresh) {
-        onRefresh();
+    setDeletingId(id);
+
+    try {
+      const success = await deleteBooking(id);
+      if (success) {
+        alert("Booking berhasil dihapus!");
+        // Refresh data setelah delete
+        if (onRefresh) {
+          onRefresh();
+        }
+      } else {
+        alert("Gagal menghapus booking. Silakan coba lagi.");
       }
-    } else {
-      alert("Gagal menghapus booking. Silakan coba lagi.");
+    } catch (error) {
+      console.error("Error deleting:", error);
+      alert("Terjadi kesalahan saat menghapus.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -138,8 +148,11 @@ export default function BookingTable({ bookings, onRefresh }: BookingTableProps)
                   {/* Delete Button */}
                   <button
                     onClick={() => handleDelete(booking.id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded-md text-xs">
-                    Delete
+                    disabled={deletingId === booking.id}
+                    className={`px-3 py-1 rounded-md text-xs text-white ${deletingId === booking.id ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                      }`}
+                  >
+                    {deletingId === booking.id ? "Deleting..." : "Delete"}
                   </button>
                 </td>
               </tr>
