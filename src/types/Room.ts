@@ -16,6 +16,7 @@ export interface RoomType {
   name: string;
   price: number; // or price_per_night
   price_per_night?: number; // handle both naming conventions
+  amenities?: string;
 }
 
 export interface RoomDetail {
@@ -27,4 +28,14 @@ export interface RoomDetail {
   status: "maintenance" | "occupied" | "available";
   price_per_night?: number; // keep for backward compatibility
   room_type?: RoomType; // relation
+}
+
+export interface RoomTable {
+  id: number;
+  id_rooms_type: number;
+  id_hotel: number;
+  room_number: string;
+  status: "maintenance" | "occupied" | "available" | "out of order";
+  room_type_name: string;
+  amenities: string;
 }

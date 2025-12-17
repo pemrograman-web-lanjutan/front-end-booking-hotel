@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Room } from "../../types/Room";
+import { RoomTable, RoomType } from "../../types/Room";
+import { Hotel } from "../../types/Hotel";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (room: Room) => void;
-  initialData?: Room | null;
+  onSubmit: (room: RoomTable) => void;
+  initialData?: RoomTable | null;
 }
 
 export default function RoomModal({
@@ -16,19 +17,82 @@ export default function RoomModal({
   onSubmit,
   initialData,
 }: Props) {
-  const [form, setForm] = useState<Room>({
-    roomId: "",
-    roomType: "",
-    bedType: "",
-    maxOccupancy: 1,
-    amenities: "",
+  const [form, setForm] = useState<RoomTable>({
+    id: 0,
+    room_number: "",
+    id_hotel: 0,
+    id_rooms_type: 0,
     status: "available",
+    room_type_name: "",
+    amenities: "",
   });
+
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch options directly from API
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        console.log("Fetching hotels and room types...");
+
+        // Fetch Hotels
+        const resHotels = await fetch("http://localhost:8000/api/hotel");
+        const jsonHotels = await resHotels.json();
+        console.log("Hotels response:", jsonHotels);
+
+        let hotelsData: Hotel[] = [];
+        if (jsonHotels.data && Array.isArray(jsonHotels.data)) {
+          hotelsData = jsonHotels.data;
+        } else if (Array.isArray(jsonHotels)) {
+          hotelsData = jsonHotels;
+        }
+        setHotels(hotelsData);
+
+        // Fetch Room Types
+        const resRoomTypes = await fetch("http://localhost:8000/api/room-type");
+        const jsonRoomTypes = await resRoomTypes.json();
+        console.log("Room Types response:", jsonRoomTypes);
+
+        let roomTypesData: RoomType[] = [];
+        if (jsonRoomTypes.data && Array.isArray(jsonRoomTypes.data)) {
+          roomTypesData = jsonRoomTypes.data;
+        } else if (Array.isArray(jsonRoomTypes)) {
+          roomTypesData = jsonRoomTypes;
+        }
+        setRoomTypes(roomTypesData);
+
+      } catch (error) {
+        console.error("Error fetching data for modal:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (open) {
+      fetchData();
+    }
+  }, [open]);
 
   // isi otomatis jika mode update
   useEffect(() => {
-    if (initialData) setForm(initialData);
-  }, [initialData]);
+    if (initialData) {
+      setForm(initialData);
+    } else {
+      // Reset form for create
+      setForm({
+        id: 0,
+        room_number: "",
+        id_hotel: 0,
+        id_rooms_type: 0,
+        status: "available",
+        room_type_name: "",
+        amenities: "",
+      });
+    }
+  }, [initialData, open]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -38,7 +102,7 @@ export default function RoomModal({
     const { name, value } = e.target;
     setForm({
       ...form,
-      [name]: name === "maxOccupancy" ? Number(value) : value,
+      [name]: ["id", "id_hotel", "id_rooms_type"].includes(name) ? Number(value) : value,
     });
   };
 
@@ -58,64 +122,66 @@ export default function RoomModal({
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Room Number */}
           <div>
-            <label className="block text-sm font-medium">Room ID</label>
+            <label className="block text-sm font-medium">Room Number</label>
             <input
-              name="roomId"
-              value={form.roomId}
+              name="room_number"
+              value={form.room_number}
               onChange={handleChange}
               className="w-full border p-2 rounded"
               required
-              disabled={!!initialData}
             />
           </div>
 
+          {/* Hotel Selection */}
+          <div>
+            <label className="block text-sm font-medium">Hotel</label>
+            <select
+              name="id_hotel"
+              value={form.id_hotel || ""}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+              required
+            >
+              <option value="" disabled>-- Select Hotel --</option>
+              {loading ? (
+                <option disabled>Loading hotels...</option>
+              ) : (
+                hotels.map((hotel) => (
+                  <option key={hotel.hotel_id} value={hotel.hotel_id}>
+                    {hotel.nama_hotel}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+
+          {/* Room Type Selection */}
           <div>
             <label className="block text-sm font-medium">Room Type</label>
-            <input
-              name="roomType"
-              value={form.roomType}
+            <select
+              name="id_rooms_type"
+              value={form.id_rooms_type || ""}
               onChange={handleChange}
               className="w-full border p-2 rounded"
               required
-            />
+            >
+              <option value="" disabled>-- Select Room Type --</option>
+              {loading ? (
+                <option disabled>Loading room types...</option>
+              ) : (
+                roomTypes.map((rt) => (
+                  <option key={rt.id} value={rt.id}>
+                    {rt.name} -- {rt.amenities ? `(${rt.amenities})` : ""}
+                  </option>
+                ))
+              )}
+            </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium">Bed Type</label>
-            <input
-              name="bedType"
-              value={form.bedType}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Max Occupancy</label>
-            <input
-              type="number"
-              name="maxOccupancy"
-              value={form.maxOccupancy}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              min={1}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Amenities</label>
-            <textarea
-              name="amenities"
-              value={form.amenities}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              rows={3}
-            />
-          </div>
-
+          {/* Status */}
           <div>
             <label className="block text-sm font-medium">Status</label>
             <select
@@ -123,9 +189,10 @@ export default function RoomModal({
               value={form.status}
               onChange={handleChange}
               className="w-full border p-2 rounded">
-              <option value="Available">Available</option>
-              <option value="Occupied">Occupied</option>
-              <option value="Maintenance">Maintenance</option>
+              <option value="available">Available</option>
+              <option value="occupied">Occupied</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="out of order">Out of Order</option>
             </select>
           </div>
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RoomModal from "../modal/ModalFormRoom";
-import { Room } from "../../types/Room";
+import { RoomTable } from "../../types/Room";
+import { getRoomsForDashboard } from "@/app/functions/getRooms";
 
 const getStatusLabel = (status: string) => {
   switch (status) {
@@ -14,63 +15,55 @@ const getStatusLabel = (status: string) => {
       return { label: "Fully Booked", color: "text-red-600" };
     case "maintenance":
       return { label: "Maintenance", color: "text-gray-500" };
+    case "occupied":
+      return { label: "Occupied", color: "text-blue-600" };
     default:
       return { label: status, color: "text-gray-600" };
   }
 };
 
 export default function RoomsPage() {
-  const [rooms, setRooms] = useState<Room[]>([
-    {
-      roomId: "1",
-      roomType: "Deluxe Room",
-      bedType: "Queen",
-      maxOccupancy: 2,
-      amenities: "WiFi, AC, TV, Shower",
-      status: "available",
-    },
-    {
-      roomId: "2",
-      roomType: "Suite Room",
-      bedType: "King",
-      maxOccupancy: 3,
-      amenities: "WiFi, AC, TV, Bathtub, Mini Bar",
-      status: "maintenance",
-    },
-    {
-      roomId: "3",
-      roomType: "Standard Room",
-      bedType: "Twin",
-      maxOccupancy: 2,
-      amenities: "WiFi, AC, TV",
-      status: "occupied",
-    },
-  ]);
-
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [rooms, setRooms] = useState<RoomTable[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedRoom, setSelectedRoom] = useState<RoomTable | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    setLoading(true);
+    const data = await getRoomsForDashboard();
+    setRooms(data);
+    setLoading(false);
+  };
 
   const handleCreate = () => {
     setSelectedRoom(null);
     setModalOpen(true);
   };
 
-  const handleEdit = (room: Room) => {
+  const handleEdit = (room: RoomTable) => {
     setSelectedRoom(room);
     setModalOpen(true);
   };
 
-  const handleSubmit = (room: Room) => {
-    if (selectedRoom) {
-      setRooms(rooms.map((r) => (r.roomId === room.roomId ? room : r)));
-    } else {
-      setRooms([...rooms, room]);
-    }
+  const handleSubmit = (room: RoomTable) => {
+    // Optimistic update or refetch
+    fetchRooms();
+    setModalOpen(false);
   };
 
-  const deleteRoom = (id: string) => {
-    setRooms(rooms.filter((room) => room.roomId !== id));
+  const deleteRoom = (id: number) => {
+    // Implement delete logic here or calling an API
+    console.log("Deleting room with id:", id);
+    setRooms(rooms.filter((room) => room.id !== id));
   };
+
+  if (loading) {
+    return <div className="p-6">Loading rooms...</div>;
+  }
 
   return (
     <div className="p-6">
@@ -83,43 +76,49 @@ export default function RoomsPage() {
       <table className="w-full border-collapse border text-sm">
         <thead>
           <tr className="bg-gray-100">
-            <th className="border px-3 py-2 text-left">Room ID</th>
-            <th className="border px-3 py-2 text-left">Room Type</th>
-            <th className="border px-3 py-2 text-left">Bed Type</th>
-            <th className="border px-3 py-2 text-left">Max Occupancy</th>
-            <th className="border px-3 py-2 text-left">Amenities</th>
+            <th className="border px-3 py-2 text-left">ID</th>
+            <th className="border px-3 py-2 text-left">Room Number</th>
+            <th className="border px-3 py-2 text-left">Hotel ID</th>
+            <th className="border px-3 py-2 text-left">Room Type ID</th>
             <th className="border px-3 py-2 text-left">Status</th>
             <th className="border px-3 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {rooms.map((room) => {
-            const { label, color } = getStatusLabel(room.status);
-            return (
-              <tr key={room.roomId} className="hover:bg-gray-50">
-                <td className="border px-3 py-2">{room.roomId}</td>
-                <td className="border px-3 py-2">{room.roomType}</td>
-                <td className="border px-3 py-2">{room.bedType}</td>
-                <td className="border px-3 py-2">{room.maxOccupancy}</td>
-                <td className="border px-3 py-2">{room.amenities}</td>
-                <td className={`border px-3 py-2 font-medium ${color}`}>
-                  {label}
-                </td>
-                <td className="border px-3 py-2 text-center">
-                  <button
-                    onClick={() => handleEdit(room)}
-                    className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteRoom(room.roomId)}
-                    className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {rooms.length > 0 ? (
+            rooms.map((room) => {
+              const { label, color } = getStatusLabel(room.status);
+              return (
+                <tr key={room.id} className="hover:bg-gray-50">
+                  <td className="border px-3 py-2">{room.id}</td>
+                  <td className="border px-3 py-2">{room.room_number}</td>
+                  <td className="border px-3 py-2">{room.id_hotel}</td>
+                  <td className="border px-3 py-2">{room.id_rooms_type}</td>
+                  <td className={`border px-3 py-2 font-medium ${color}`}>
+                    {label}
+                  </td>
+                  <td className="border px-3 py-2 text-center">
+                    <button
+                      onClick={() => handleEdit(room)}
+                      className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteRoom(room.id)}
+                      className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={6} className="border px-3 py-2 text-center">
+                No rooms found.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 
