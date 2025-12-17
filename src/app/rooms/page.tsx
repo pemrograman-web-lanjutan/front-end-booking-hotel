@@ -5,7 +5,7 @@ import RoomCard from "@/app/rooms/components/RoomCard";
 import SearchForm from "@/app/rooms/components/SearchForm";
 import { useRoomsStore } from "@/store/useRoomsStore";
 import Navbar from "@/components/Navbar";
-import RoomsPages from "../hotel/[id]/[rooms]";
+import RoomsPages from "../hotel/[id]/rooms";
 
 export default function RoomsPage() {
   const { rooms, loading, error, searchRooms } = useRoomsStore();

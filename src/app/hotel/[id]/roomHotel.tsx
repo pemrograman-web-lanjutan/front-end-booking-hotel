@@ -10,15 +10,23 @@ export default function RoomHotel({ id }: { id: string }) {
   useEffect(() => {
     async function fetchHotel() {
       try {
-        const res = await fetch("http://localhost:8000/api/index/hotel");
+        const res = await fetch(
+          "http://localhost:8000/api/index/get-hoteldata-review"
+        );
         const json = await res.json();
 
-        const data = Array.isArray(json.data) ? json.data : [];
-        const found = data.find((item: any) => String(item.id) === String(id));
+        const list = Array.isArray(json.data) ? json.data : [];
+        console.log("SAMPLE ITEM:", list[0]);
 
-        setHotel(found || null);
-      } catch (error) {
-        console.error(error);
+        const found = list.find(
+          (item: any) => Number(item.hotel_id) === Number(id)
+        );
+
+        console.log("HOTEL FOUND:", found);
+
+        setHotel(found ?? null);
+      } catch (err) {
+        console.error("FETCH ERROR:", err);
         setHotel(null);
       }
     }
@@ -56,7 +64,6 @@ export default function RoomHotel({ id }: { id: string }) {
         />
       </div>
 
-      {/* Deskripsi */}
       <div className="max-w-3xl mx-auto text-justify text-sm md:text-base leading-relaxed">
         <p className="mb-4 text-gray-700">
           Inferno Hotel Cabang Jembrana menawarkan pengalaman menginap premium

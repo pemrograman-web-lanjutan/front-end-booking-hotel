@@ -14,7 +14,9 @@ export default function Hotel() {
   useEffect(() => {
     async function fetchHotels() {
       try {
-        const res = await fetch("http://localhost:8000/api/index/hotel");
+        const res = await fetch(
+          "http://localhost:8000/api/index/get-hoteldata-review"
+        );
         const json = await res.json();
 
         setHotels(Array.isArray(json.data) ? json.data : []);
