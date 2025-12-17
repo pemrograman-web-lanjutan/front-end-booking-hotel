@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import RoomModal from "../modal/ModalFormRoom";
-import { RoomTable } from "../../types/Room";
-import { getRoomsForDashboard } from "@/app/functions/getRooms";
+import { RoomDetail } from "@/types/Room";
+import { addRoom } from "@/app/functions/room/addRoom";
+import { updateRoom } from "@/app/functions/room/updateRoom";
+import { deleteRoom } from "@/app/functions/room/deleteRoom";
 
-const getStatusLabel = (status: string) => {
+/* ===================== STATUS HELPER ===================== */
+const getStatusLabel = (status: RoomDetail["status"]) => {
   switch (status) {
     case "available":
       return { label: "Available", color: "text-green-600" };
-    case "few_left":
-      return { label: "Few Left", color: "text-yellow-600" };
-    case "fully_booked":
-      return { label: "Fully Booked", color: "text-red-600" };
+    case "occupied":
+      return { label: "Occupied", color: "text-red-600" };
     case "maintenance":
       return { label: "Maintenance", color: "text-gray-500" };
     case "occupied":
@@ -22,91 +23,135 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-export default function RoomsPage() {
-  const [rooms, setRooms] = useState<RoomTable[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedRoom, setSelectedRoom] = useState<RoomTable | null>(null);
+interface Props {
+  rooms: RoomDetail[];
+  onRefresh?: () => void;
+}
+
+export default function Room({ rooms, onRefresh }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchRooms();
-  }, []);
+  const safeRooms = Array.isArray(rooms) ? rooms : [];
 
-  const fetchRooms = async () => {
-    setLoading(true);
-    const data = await getRoomsForDashboard();
-    setRooms(data);
-    setLoading(false);
-  };
-
+  /* ===================== CREATE ===================== */
   const handleCreate = () => {
     setSelectedRoom(null);
     setModalOpen(true);
   };
 
-  const handleEdit = (room: RoomTable) => {
+  /* ===================== EDIT ===================== */
+  const handleEdit = (room: RoomDetail) => {
     setSelectedRoom(room);
     setModalOpen(true);
   };
 
-  const handleSubmit = (room: RoomTable) => {
-    // Optimistic update or refetch
-    fetchRooms();
-    setModalOpen(false);
+  /* ===================== SUBMIT ===================== */
+  const handleSubmit = async (roomData: RoomDetail) => {
+    setSaving(true);
+    try {
+      if (selectedRoom) {
+        await updateRoom(selectedRoom.id, roomData);
+        alert("Room berhasil diperbarui");
+      } else {
+        await addRoom(roomData);
+        alert("Room berhasil ditambahkan");
+      }
+
+      setModalOpen(false);
+      setSelectedRoom(null);
+      onRefresh?.();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan room");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const deleteRoom = (id: number) => {
-    // Implement delete logic here or calling an API
-    console.log("Deleting room with id:", id);
-    setRooms(rooms.filter((room) => room.id !== id));
+  /* ===================== DELETE ===================== */
+  const handleDelete = async (id: number) => {
+    if (!confirm("Yakin ingin menghapus room ini?")) return;
+
+    setDeletingId(id);
+    try {
+      const success = await deleteRoom(id);
+      if (success) {
+        alert("Room berhasil dihapus");
+        onRefresh?.();
+      } else {
+        alert("Gagal menghapus room");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan");
+    } finally {
+      setDeletingId(null);
+    }
   };
 
-  if (loading) {
-    return <div className="p-6">Loading rooms...</div>;
-  }
-
+  /* ===================== RENDER ===================== */
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Rooms</h2>
-      <button
-        onClick={handleCreate}
-        className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md">
-        Create Room
-      </button>
+    <div className="p-6 bg-white shadow rounded-xl">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Data Room</h2>
+        <button
+          onClick={handleCreate}
+          className="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">
+          + New Room
+        </button>
+      </div>
+
       <table className="w-full border-collapse border text-sm">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border px-3 py-2 text-left">ID</th>
-            <th className="border px-3 py-2 text-left">Room Number</th>
-            <th className="border px-3 py-2 text-left">Hotel ID</th>
-            <th className="border px-3 py-2 text-left">Room Type ID</th>
-            <th className="border px-3 py-2 text-left">Status</th>
-            <th className="border px-3 py-2 text-center">Actions</th>
+          <tr className="bg-gray-200">
+            <th className="border px-3 py-2">Room</th>
+            <th className="border px-3 py-2">Hotel</th>
+            <th className="border px-3 py-2">Type</th>
+            <th className="border px-3 py-2">Price</th>
+            <th className="border px-3 py-2">Status</th>
+            <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
         </thead>
+
         <tbody>
-          {rooms.length > 0 ? (
-            rooms.map((room) => {
+          {safeRooms.length > 0 ? (
+            safeRooms.map((room) => {
               const { label, color } = getStatusLabel(room.status);
+
               return (
                 <tr key={room.id} className="hover:bg-gray-50">
-                  <td className="border px-3 py-2">{room.id}</td>
-                  <td className="border px-3 py-2">{room.room_number}</td>
-                  <td className="border px-3 py-2">{room.id_hotel}</td>
-                  <td className="border px-3 py-2">{room.id_rooms_type}</td>
+                  <td className="border px-3 py-2 font-medium">
+                    {room.room_number}
+                  </td>
+                  <td className="border px-3 py-2">{room.nama_hotel}</td>
+                  <td className="border px-3 py-2">
+                    {room.room_type?.name ?? "-"}
+                  </td>
+                  <td className="border px-3 py-2">
+                    {room.price_per_night
+                      ? `Rp ${room.price_per_night.toLocaleString("id-ID")}`
+                      : "-"}
+                  </td>
                   <td className={`border px-3 py-2 font-medium ${color}`}>
                     {label}
                   </td>
-                  <td className="border px-3 py-2 text-center">
+                  <td className="border px-3 py-2 flex gap-2 justify-center">
                     <button
                       onClick={() => handleEdit(room)}
-                      className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
+                      className="px-3 py-1 bg-blue-600 text-white rounded-md text-xs">
                       Edit
                     </button>
                     <button
-                      onClick={() => deleteRoom(room.id)}
-                      className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
-                      Delete
+                      onClick={() => handleDelete(room.id)}
+                      disabled={deletingId === room.id}
+                      className={`px-3 py-1 text-xs text-white rounded-md ${deletingId === room.id
+                          ? "bg-gray-400"
+                          : "bg-red-600 hover:bg-red-700"
+                        }`}>
+                      {deletingId === room.id ? "Deleting..." : "Delete"}
                     </button>
                   </td>
                 </tr>
@@ -114,20 +159,26 @@ export default function RoomsPage() {
             })
           ) : (
             <tr>
-              <td colSpan={6} className="border px-3 py-2 text-center">
-                No rooms found.
+              <td
+                colSpan={6}
+                className="border px-3 py-4 text-center text-gray-500">
+                Tidak ada data room
               </td>
             </tr>
           )}
         </tbody>
       </table>
 
-      <RoomModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        initialData={selectedRoom}
-      />
+      {/* MODAL */}
+      {modalOpen && (
+        <RoomModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleSubmit}
+          initialData={selectedRoom}
+          loading={saving}
+        />
+      )}
     </div>
   );
 }

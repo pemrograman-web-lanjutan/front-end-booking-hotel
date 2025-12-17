@@ -1,111 +1,171 @@
 "use client";
 
 import { useState } from "react";
-import { Hotel } from "../../types/Hotel";
 import HotelModal from "../modal/ModalFormHotels";
+import { Hotel } from "@/types/Hotel";
 
-export default function HotelsPages() {
-  const [hotels, setHotels] = useState<Hotel[]>([
-    {
-      hotel_id: 1,
-      nama_hotel: "Hotel Inferno Denpasar",
-      cabang_hotel: "Denpasar",
-      alamat_hotel: "Jl. Gatot Subroto No. 45, Denpasar",
-      lat: -8.65,
-      lng: 115.216667,
-      // rating: 4.5,
-    },
-    {
-      hotel_id: 2,
-      nama_hotel: "Hotel Inferno Badung",
-      cabang_hotel: "Badung",
-      alamat_hotel: "Jl. Raya Kuta No. 12, Badung",
-      lat: -8.72,
-      lng: 115.168333,
-    },
-  ]);
-  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+import { addHotel } from "@/app/functions/hotel/addHotel";
+import { updateHotel } from "@/app/functions/hotel/updateHotel";
+import { deleteHotel } from "@/app/functions/hotel/deleteHotel";
+
+interface HotelTableProps {
+  hotels: Hotel[];
+  onRefresh?: () => void;
+}
+
+export default function HotelTable({ hotels, onRefresh }: HotelTableProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const safeHotels = Array.isArray(hotels) ? hotels : [];
+
+  console.table(
+    safeHotels.map((h) => ({
+      id: h.id,
+      nama: h.nama_hotel,
+    }))
+  );
 
   const handleCreate = () => {
     setSelectedHotel(null);
     setModalOpen(true);
   };
 
-  const handleEdit = (room: Hotel) => {
-    setSelectedHotel(room);
+  const handleEdit = (hotel: Hotel) => {
+    setSelectedHotel(hotel);
     setModalOpen(true);
   };
 
-  const handleSubmit = (hotel: Hotel) => {
-    if (selectedHotel) {
-      setHotels(hotels.map((r) => (r.hotel_id === hotel.hotel_id ? hotel : r)));
-    } else {
-      setHotels([...hotels, hotel]);
+  const handleSubmit = async (hotelData: Hotel) => {
+    setSaving(true);
+
+    try {
+      if (selectedHotel) {
+        // UPDATE
+        await updateHotel(selectedHotel.id, hotelData);
+        alert("Hotel berhasil diperbarui");
+      } else {
+        // CREATE
+        await addHotel(hotelData);
+        alert("Hotel berhasil ditambahkan");
+      }
+
+      setModalOpen(false);
+      setSelectedHotel(null);
+      onRefresh?.();
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menyimpan data hotel");
+    } finally {
+      setSaving(false);
     }
   };
 
-  const deleteHotel = (id: number) => {
-    setHotels(hotels.filter((hotel) => hotel.hotel_id !== id));
+  /* ======================
+     DELETE
+  ====================== */
+  const handleDelete = async (id: number) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus hotel ini?")) return;
+
+    setDeletingId(id);
+
+    try {
+      const success = await deleteHotel(id);
+      if (success) {
+        alert("Hotel berhasil dihapus");
+        onRefresh?.();
+      } else {
+        alert("Gagal menghapus hotel");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan saat menghapus");
+    } finally {
+      setDeletingId(null);
+    }
   };
 
+  /* ======================
+     RENDER
+  ====================== */
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Informasi Hotel</h2>
+    <div className="p-6 bg-white shadow rounded-xl">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold mb-4">Informasi Hotel</h2>
 
-      <button
-        onClick={handleCreate}
-        className="mb-4 px-4 py-2 bg-green-600 text-white rounded-md">
-        Create Hotel
-      </button>
+        <button
+          onClick={handleCreate}
+          className="px-4 py-2 bg-green-600 text-white rounded-md text-sm mb-4 hover:bg-green-700 transition">
+          + New Hotel
+        </button>
+      </div>
 
       <table className="w-full border-collapse border text-sm">
         <thead>
-          <tr className="bg-gray-100">
+          <tr className="bg-gray-200">
             <th className="border px-3 py-2 text-left">Nama Hotel</th>
             <th className="border px-3 py-2 text-left">Cabang</th>
             <th className="border px-3 py-2 text-left">Alamat</th>
-            {/* <th className="border px-3 py-2 text-left">Rating</th> */}
             <th className="border px-3 py-2 text-center">Aksi</th>
           </tr>
         </thead>
+
         <tbody>
-          {hotels.map((hotel) => (
-            <tr key={hotel.hotel_id} className="hover:bg-gray-50">
-              <td className="border px-3 py-2 font-medium">
-                {hotel.nama_hotel}
-              </td>
-              <td className="border px-3 py-2">{hotel.cabang_hotel}</td>
-              <td className="border px-3 py-2">{hotel.alamat_hotel}</td>
-              {/* <td className="border px-3 py-2">
-                <span className="flex items-center">
-                  <span className="text-yellow-500 mr-1">★</span>
-                  {hotel.rating.toFixed(1)}
-                </span>
-              </td> */}
-              <td className="border px-3 py-2 text-center">
-                <button
-                  onClick={() => handleEdit(hotel)}
-                  className="px-3 py-1 text-xs bg-blue-600 text-white rounded-md mr-2">
-                  Edit
-                </button>
-                <button
-                  onClick={() => deleteHotel(hotel.hotel_id)}
-                  className="px-3 py-1 text-xs bg-red-600 text-white rounded-md">
-                  Delete
-                </button>
+          {safeHotels.length > 0 ? (
+            safeHotels.map((hotel) => (
+              <tr
+                key={hotel.id}
+                className="hover:bg-[var(--primary)] hover:text-[var(--foreground)] transition">
+                <td className="border px-3 py-2 font-medium">
+                  {hotel.nama_hotel}
+                </td>
+                <td className="border px-3 py-2">{hotel.cabang_hotel}</td>
+                <td className="border px-3 py-2">{hotel.alamat_hotel}</td>
+
+                <td className="border px-3 py-2 flex gap-2 justify-center">
+                  <button
+                    onClick={() => handleEdit(hotel)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded-md text-xs">
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(hotel.id)}
+                    disabled={deletingId === hotel.id}
+                    className={`px-3 py-1 rounded-md text-xs text-white ${
+                      deletingId === hotel.id
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-red-600 hover:bg-red-700"
+                    }`}>
+                    {deletingId === hotel.id ? "Deleting..." : "Delete"}
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={4}
+                className="border px-3 py-2 text-center text-gray-500">
+                No hotels found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
-      <HotelModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        initialData={selectedHotel}
-      />
+      {/* MODAL */}
+      {modalOpen && (
+        <HotelModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSubmit={handleSubmit}
+          initialData={selectedHotel}
+          loading={saving}
+        />
+      )}
     </div>
   );
 }

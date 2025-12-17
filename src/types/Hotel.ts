@@ -1,5 +1,5 @@
 export type Hotel = {
-  hotel_id: number;
+  id: number;
   nama_hotel: string;
   alamat_hotel: string;
   cabang_hotel: string;

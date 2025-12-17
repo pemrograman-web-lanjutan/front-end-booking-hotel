@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import BookingForm from "../[id]/[BookingForm]";
+import BookingForm from "@/components/modal/BookingFormModal";
+
 import RoomDetailModal from "../../../components/modal/RoomDetailModal";
 import { User } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -237,7 +238,10 @@ export default function RoomsPages() {
         ))}
       </div>
 
-      {showForm && <BookingForm onClose={() => setShowForm(false)} />}
+      {showForm && (
+        <BookingForm open={showForm} onClose={() => setShowForm(false)} />
+      )}
+
       {showDetail && selectedRoomId && (
         <RoomDetailModal
           onClose={() => {

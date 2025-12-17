@@ -11,11 +11,12 @@ interface Props {
   initialData?: RoomTable | null;
 }
 
-export default function RoomModal({
+export default function ModalFormRoom({
   open,
   onClose,
   onSubmit,
   initialData,
+  loading,
 }: Props) {
   const [form, setForm] = useState<RoomTable>({
     id: 0,
@@ -76,7 +77,6 @@ export default function RoomModal({
     }
   }, [open]);
 
-  // isi otomatis jika mode update
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -95,9 +95,7 @@ export default function RoomModal({
   }, [initialData, open]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setForm({
@@ -109,17 +107,16 @@ export default function RoomModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(form);
-    onClose();
   };
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg w-full max-w-xl p-6">
-        <h2 className="text-xl font-semibold mb-4">
-          {initialData ? "Update Room" : "Create Room"}
-        </h2>
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <h3 className="text-lg font-semibold mb-4">
+          {initialData ? "Edit Room" : "Tambah Room"}
+        </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -196,17 +193,21 @@ export default function RoomModal({
             </select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-2 pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border rounded">
+              className="px-4 py-2 border rounded-md">
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded">
-              {initialData ? "Update" : "Create"}
+              disabled={loading}
+              className={`px-4 py-2 rounded-md text-white ${loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700"
+                }`}>
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

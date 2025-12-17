@@ -1,15 +1,17 @@
 import Navbar from "../../../components/Navbar";
-import DetailHotel from "./[detailHotel]";
-import RoomHotel from "./[roomHotel]";
-import RoomsPages from "./[rooms]";
-import UlasanList from "./[UlasanList]";
+import DetailHotel from "./detailHotel";
+import RoomHotel from "./roomHotel";
+import RoomsPages from "./rooms";
+import UlasanList from "./UlasanList";
 
-export default async function HotelsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
+export default function HotelsPage({ params }: PageProps) {
+  const { id } = params;
 
   console.log("Hotel ID:", id);
 

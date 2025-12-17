@@ -21,12 +21,7 @@ const Sidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", key: "D" },
     { icon: Receipt, label: "Booking", href: "/dashboard/bookings", key: "B" },
-    {
-      icon: CreditCard,
-      label: "Payments",
-      href: "/dashboard/payments",
-      key: "P",
-    },
+
     { icon: Bed, label: "Rooms", href: "/dashboard/rooms", key: "R" },
 
     { icon: BarChart3, label: "Hotels", href: "/dashboard/hotels", key: "H" },
@@ -40,17 +35,17 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-60 bg-[#2c2c2c] text-white flex flex-col flex-shrink-0">
-      <div className="h-16 flex items-center justify-center border-b border-white">
-        <Image src={"/logo/Asset-6.png"} alt="logo" width={200} height={200} />
+    <div className="w-50 bg-[#2c2c2c] text-[var(--foreground)] flex flex-col flex-shrink-0">
+      <div className="h-16 flex items-center justify-center border-b border-[var(--foreground)]">
+        <Image src={"/logo/Asset-6.png"} alt="logo" width={150} height={150} />
       </div>
 
-      <div className="flex items-center justify-center flex-row gap-2 py-5 border-b border-white">
+      <div className="flex items-center justify-center flex-row gap-2 py-5 border-b border-[var(--foreground)]">
         <div className="w-10 h-10 bg-gray-500 rounded-full mb-2 flex items-center justify-center">
           <User size={24} className="text-gray-300" />
         </div>
 
-        <span className="text-sm">Admin</span>
+        <span className="text-md uppercase">Admin</span>
       </div>
 
       <nav className="flex-1 px-2 py-4 space-y-2">
@@ -62,7 +57,7 @@ const Sidebar = () => {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
                 isActive
-                  ? "bg-[var(--primary)] text-white"
+                  ? "bg-[var(--primary)] text-[var(--foreground)]"
                   : "hover:bg-gray-700"
               }`}>
               <item.icon size={18} />
