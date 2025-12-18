@@ -16,8 +16,6 @@ const getStatusLabel = (status: RoomDetail["status"]) => {
       return { label: "Occupied", color: "text-red-600" };
     case "maintenance":
       return { label: "Maintenance", color: "text-gray-500" };
-    case "occupied":
-      return { label: "Occupied", color: "text-blue-600" };
     default:
       return { label: status, color: "text-gray-600" };
   }
@@ -148,8 +146,8 @@ export default function Room({ rooms, onRefresh }: Props) {
                       onClick={() => handleDelete(room.id)}
                       disabled={deletingId === room.id}
                       className={`px-3 py-1 text-xs text-white rounded-md ${deletingId === room.id
-                          ? "bg-gray-400"
-                          : "bg-red-600 hover:bg-red-700"
+                        ? "bg-gray-400"
+                        : "bg-red-600 hover:bg-red-700"
                         }`}>
                       {deletingId === room.id ? "Deleting..." : "Delete"}
                     </button>

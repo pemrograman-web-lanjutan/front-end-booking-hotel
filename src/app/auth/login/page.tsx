@@ -16,22 +16,27 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const submitPendingBooking = async (bookingData: any) => {
+  const submitPendingBooking = async (bookingData: any, userId: number) => {
     try {
-      const response = await fetch("http://localhost:8000/api/booking", {
+      // Update the user_id to the one who just logged in
+      const finalBookingData = { ...bookingData, user_id: userId };
+
+      const response = await fetch("http://localhost:8000/api/bookings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(bookingData),
+        body: JSON.stringify(finalBookingData),
       });
 
       if (response.ok) {
         toast.success("Booking berhasil dikirim!", { duration: 3000 });
         localStorage.removeItem("pendingBooking");
       } else {
-        toast.error("Booking gagal!", { duration: 3000 });
+        const errJson = await response.json();
+        console.error("Booking error:", errJson);
+        toast.error(errJson.message || "Booking gagal!", { duration: 3000 });
       }
     } catch (error) {
       toast.error("Error saat booking: " + error, { duration: 3000 });
@@ -39,9 +44,8 @@ export default function Login() {
   };
 
   const setTokenCookie = (token: string) => {
-    document.cookie = `token=${token}; path=/; max-age=${
-      7 * 24 * 60 * 60
-    }; SameSite=Strict`;
+    document.cookie = `token=${token}; path=/; max-age=${7 * 24 * 60 * 60
+      }; SameSite=Strict`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,9 +64,19 @@ export default function Login() {
 
       // Check for pending booking
       const pendingBooking = localStorage.getItem("pendingBooking");
-      if (pendingBooking) {
-        const bookingData = JSON.parse(pendingBooking);
-        await submitPendingBooking(bookingData);
+      if (pendingBooking && pendingBooking !== "undefined" && pendingBooking !== "null") {
+        try {
+          const bookingData = JSON.parse(pendingBooking);
+          // Only submit if it looks like a real object with room_id
+          if (bookingData && typeof bookingData === 'object' && bookingData.room_id) {
+            await submitPendingBooking(bookingData, data.user.id);
+          } else {
+            localStorage.removeItem("pendingBooking");
+          }
+        } catch (e) {
+          console.error("Invalid pending booking data", e);
+          localStorage.removeItem("pendingBooking");
+        }
       }
 
       if (data.user.role === "admin") {

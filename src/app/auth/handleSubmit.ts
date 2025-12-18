@@ -1,6 +1,7 @@
 import { toast } from "react-hot-toast";
 
 export async function handleLogin(email: string, password: string) {
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {

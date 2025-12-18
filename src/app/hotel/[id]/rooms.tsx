@@ -16,7 +16,13 @@ export default function RoomsPages() {
   const [showForm, setShowForm] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
 
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const [selectedBookingRoom, setSelectedBookingRoom] = useState<{
+    id: number;
+    room_type_name: string;
+    price_per_night: number;
+    room_number: string;
+  } | null>(null);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null); // For Detail Modal
   const [rooms, setRooms] = useState<DetailRooms[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -178,7 +184,15 @@ export default function RoomsPages() {
 
                         <td className="p-4 text-center">
                           <button
-                            onClick={() => setShowForm(true)}
+                            onClick={() => {
+                              setSelectedBookingRoom({
+                                id: room.id,
+                                room_type_name: room.room_type_name,
+                                price_per_night: room.price_per_night,
+                                room_number: room.room_number,
+                              });
+                              setShowForm(true);
+                            }}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                             Pilih
                           </button>
@@ -213,7 +227,15 @@ export default function RoomsPages() {
                     </div>
                     <div className="text-xs text-red-500">Harga per malam</div>
                     <button
-                      onClick={() => setShowForm(true)}
+                      onClick={() => {
+                        setSelectedBookingRoom({
+                          id: room.id,
+                          room_type_name: room.room_type_name,
+                          price_per_night: room.price_per_night,
+                          room_number: room.room_number,
+                        });
+                        setShowForm(true);
+                      }}
                       className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm">
                       Pilih
                     </button>
@@ -239,7 +261,11 @@ export default function RoomsPages() {
       </div>
 
       {showForm && (
-        <BookingForm open={showForm} onClose={() => setShowForm(false)} />
+        <BookingForm
+          open={showForm}
+          onClose={() => setShowForm(false)}
+          room={selectedBookingRoom}
+        />
       )}
 
       {showDetail && selectedRoomId && (

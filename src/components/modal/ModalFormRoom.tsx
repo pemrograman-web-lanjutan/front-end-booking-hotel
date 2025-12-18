@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RoomTable, RoomType } from "../../types/Room";
+import { RoomDetail, RoomTable, RoomType } from "../../types/Room";
 import { Hotel } from "../../types/Hotel";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (room: RoomTable) => void;
-  initialData?: RoomTable | null;
+  onSubmit: (room: any) => void;
+  initialData?: RoomDetail | null;
+  loading?: boolean;
 }
 
 export default function ModalFormRoom({
@@ -16,7 +17,7 @@ export default function ModalFormRoom({
   onClose,
   onSubmit,
   initialData,
-  loading,
+  loading: submitting = false,
 }: Props) {
   const [form, setForm] = useState<RoomTable>({
     id: 0,
@@ -30,12 +31,12 @@ export default function ModalFormRoom({
 
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
 
   // Fetch options directly from API
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      setDataLoading(true);
       try {
         console.log("Fetching hotels and room types...");
 
@@ -68,7 +69,7 @@ export default function ModalFormRoom({
       } catch (error) {
         console.error("Error fetching data for modal:", error);
       } finally {
-        setLoading(false);
+        setDataLoading(false);
       }
     };
 
@@ -79,7 +80,15 @@ export default function ModalFormRoom({
 
   useEffect(() => {
     if (initialData) {
-      setForm(initialData);
+      setForm({
+        id: initialData.id,
+        room_number: initialData.room_number,
+        id_hotel: initialData.id_hotel,
+        id_rooms_type: initialData.id_rooms_type,
+        status: initialData.status,
+        room_type_name: initialData.room_type?.name || "",
+        amenities: initialData.room_type?.amenities || "",
+      });
     } else {
       // Reset form for create
       setForm({
@@ -143,11 +152,11 @@ export default function ModalFormRoom({
               required
             >
               <option value="" disabled>-- Select Hotel --</option>
-              {loading ? (
+              {dataLoading ? (
                 <option disabled>Loading hotels...</option>
               ) : (
                 hotels.map((hotel) => (
-                  <option key={hotel.hotel_id} value={hotel.hotel_id}>
+                  <option key={hotel.id} value={hotel.id}>
                     {hotel.nama_hotel}
                   </option>
                 ))
@@ -166,7 +175,7 @@ export default function ModalFormRoom({
               required
             >
               <option value="" disabled>-- Select Room Type --</option>
-              {loading ? (
+              {dataLoading ? (
                 <option disabled>Loading room types...</option>
               ) : (
                 roomTypes.map((rt) => (
@@ -202,12 +211,12 @@ export default function ModalFormRoom({
             </button>
             <button
               type="submit"
-              disabled={loading}
-              className={`px-4 py-2 rounded-md text-white ${loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700"
+              disabled={submitting}
+              className={`px-4 py-2 rounded-md text-white ${submitting
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700"
                 }`}>
-              {loading ? "Saving..." : "Save"}
+              {submitting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>
