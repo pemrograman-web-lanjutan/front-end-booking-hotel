@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 import { Navbar } from "@/components/Navbar";
+import "leaflet/dist/leaflet.css";
 
 import { Playfair_Display, Inter } from "next/font/google";
 

@@ -1,4 +1,3 @@
-// app/functions/room/deleteRoom.ts
 export async function deleteRoom(id: number): Promise<boolean> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/${id}`, {
     method: "DELETE",

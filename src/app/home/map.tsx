@@ -1,40 +1,65 @@
 "use client";
 
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
-import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
+import L from "leaflet";
 
+/* =========================
+   TYPES
+========================= */
 interface Location {
   id: number;
   name: string;
   position: { lat: number; lng: number };
 }
 
-export default function GoogleMapHotels() {
-  const [mapHeight, setMapHeight] = useState("400px");
-  const [selected, setSelected] = useState<Location | null>(null);
+/* =========================
+   FIX LEAFLET ICON (Next.js)
+========================= */
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
 
+/* =========================
+   FIX MAP RESIZE (WAJIB)
+========================= */
+function FixMapSize() {
+  const map = useMap();
+
+  useEffect(() => {
+    // Delay sedikit agar layout benar-benar siap
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 300);
+  }, [map]);
+
+  return null;
+}
+
+/* =========================
+   MAIN COMPONENT
+========================= */
+export default function LeafletMapHotels() {
+  const [mapHeight, setMapHeight] = useState("400px");
+
+  /* Responsive height */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setMapHeight("600px");
       else if (window.innerWidth >= 640) setMapHeight("500px");
       else setMapHeight("350px");
     };
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const containerStyle = {
-    width: "100%",
-    height: mapHeight,
-  };
-
-  // Koordinat kabupaten di Bali + tambahan daerah
+  /* Data lokasi */
   const locations: Location[] = [
     {
       id: 1,
@@ -93,40 +118,38 @@ export default function GoogleMapHotels() {
     },
   ];
 
-  const center = { lat: -8.45, lng: 115.15 };
-
   return (
     <div className="bg-[var(--primary)]">
       <div className="px-4 py-10 sm:px-8 md:px-16 lg:px-20">
-        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!}>
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={9}>
-            {locations.map((loc) => (
-              <Marker
-                key={loc.id}
-                position={loc.position}
-                onClick={() => setSelected(loc)}
-              />
-            ))}
+        <MapContainer
+          center={[-8.45, 115.15]}
+          zoom={9}
+          style={{ width: "100%", height: mapHeight }}>
+          {/* WAJIB: Fix ukuran map */}
+          <FixMapSize />
 
-            {selected && (
-              <InfoWindow
-                position={selected.position}
-                onCloseClick={() => setSelected(null)}>
+          <TileLayer
+            attribution="&copy; OpenStreetMap contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          {locations.map((loc) => (
+            <Marker
+              key={loc.id}
+              position={[loc.position.lat, loc.position.lng]}>
+              <Popup>
                 <div className="text-sm">
                   <h3 className="font-semibold text-[var(--primary)]">
-                    {selected.name}
+                    {loc.name}
                   </h3>
                   <p className="text-gray-600 mt-1">
-                    {selected.name.replace("Hotel Inferno ", "")}, Bali
+                    {loc.name.replace("Hotel Inferno ", "")}, Bali
                   </p>
                 </div>
-              </InfoWindow>
-            )}
-          </GoogleMap>
-        </LoadScript>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
       </div>
     </div>
   );

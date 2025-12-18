@@ -1,32 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RoomDetail, RoomTable, RoomType } from "../../types/Room";
-import { Hotel } from "../../types/Hotel";
+
+import { RoomType } from "@/types/Room_type";
 
 interface Props {
   open: boolean;
-  onClose: () => void;
-  onSubmit: (room: any) => void;
-  initialData?: RoomDetail | null;
   loading?: boolean;
+  onClose: () => void;
+  onSubmit: (data: RoomType) => void;
+  initialData?: RoomType | null;
 }
 
-export default function ModalFormRoom({
+export default function RoomModal({
   open,
+  loading,
   onClose,
   onSubmit,
   initialData,
-  loading: submitting = false,
 }: Props) {
-  const [form, setForm] = useState<RoomTable>({
+  const [form, setForm] = useState<RoomType>({
     id: 0,
-    room_number: "",
-    id_hotel: 0,
-    id_rooms_type: 0,
-    status: "available",
-    room_type_name: "",
+    name: "",
+    max_occupancy: 1,
+    bed_type: "single",
+    price_per_night: 0,
     amenities: "",
+    description: "",
   });
 
   const [hotels, setHotels] = useState<Hotel[]>([]);
@@ -65,7 +65,6 @@ export default function ModalFormRoom({
           roomTypesData = jsonRoomTypes;
         }
         setRoomTypes(roomTypesData);
-
       } catch (error) {
         console.error("Error fetching data for modal:", error);
       } finally {
@@ -103,123 +102,101 @@ export default function ModalFormRoom({
     }
   }, [initialData, open]);
 
+  if (!open) return null;
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: ["id", "id_hotel", "id_rooms_type"].includes(name) ? Number(value) : value,
-    });
+    setForm((prev) => ({
+      ...prev,
+      [name]:
+        name === "max_occupancy" || name === "price_per_night"
+          ? Number(value)
+          : value,
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     onSubmit(form);
   };
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div className="bg-white w-full max-w-lg rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">
-          {initialData ? "Edit Room" : "Tambah Room"}
+          {initialData ? "Edit Room Type" : "Tambah Room Type"}
         </h3>
+        <div className="space-y-3">
+          <input
+            name="name"
+            placeholder="Room Type Name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+          <select
+            name="bed_type"
+            value={form.bed_type}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded">
+            <option value="single">Single</option>
+            <option value="double">Double</option>
+            <option value="twin">Twin</option>
+            <option value="king">King</option>
+            <option value="queen">Queen</option>
+          </select>
 
-          {/* Room Number */}
-          <div>
-            <label className="block text-sm font-medium">Room Number</label>
-            <input
-              name="room_number"
-              value={form.room_number}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              required
-            />
-          </div>
+          <input
+            type="number"
+            name="max_occupancy"
+            placeholder="Max Occupancy"
+            value={form.max_occupancy}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
 
-          {/* Hotel Selection */}
-          <div>
-            <label className="block text-sm font-medium">Hotel</label>
-            <select
-              name="id_hotel"
-              value={form.id_hotel || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              required
-            >
-              <option value="" disabled>-- Select Hotel --</option>
-              {dataLoading ? (
-                <option disabled>Loading hotels...</option>
-              ) : (
-                hotels.map((hotel) => (
-                  <option key={hotel.id} value={hotel.id}>
-                    {hotel.nama_hotel}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
+          <input
+            type="number"
+            name="price_per_night"
+            placeholder="Price per Night"
+            value={form.price_per_night}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
 
-          {/* Room Type Selection */}
-          <div>
-            <label className="block text-sm font-medium">Room Type</label>
-            <select
-              name="id_rooms_type"
-              value={form.id_rooms_type || ""}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              required
-            >
-              <option value="" disabled>-- Select Room Type --</option>
-              {dataLoading ? (
-                <option disabled>Loading room types...</option>
-              ) : (
-                roomTypes.map((rt) => (
-                  <option key={rt.id} value={rt.id}>
-                    {rt.name} -- {rt.amenities ? `(${rt.amenities})` : ""}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
+          <textarea
+            name="amenities"
+            placeholder="Amenities"
+            value={form.amenities ?? ""}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
 
-          {/* Status */}
-          <div>
-            <label className="block text-sm font-medium">Status</label>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="w-full border p-2 rounded">
-              <option value="available">Available</option>
-              <option value="occupied">Occupied</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="out of order">Out of Order</option>
-            </select>
-          </div>
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={form.description ?? ""}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          />
+        </div>
 
-          <div className="flex justify-end gap-2 pt-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border rounded-md">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={submitting}
-              className={`px-4 py-2 rounded-md text-white ${submitting
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
-                }`}>
-              {submitting ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </form>
+        <div className="flex justify-end gap-2 mt-6">
+          <button onClick={onClose} className="px-4 py-2 border rounded">
+            Batal
+          </button>
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="px-4 py-2 bg-blue-600 text-white rounded">
+            {loading ? "Saving..." : "Simpan"}
+          </button>
+        </div>
       </div>
     </div>
   );

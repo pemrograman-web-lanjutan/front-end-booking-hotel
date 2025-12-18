@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../../components/dashboard/Navbar";
+import Overview from "../../components/dashboard/Overview";
 import Sidebar from "../../components/dashboard/Sidebar";
 import BookingTable from "../../components/dashboard/BookingTable";
 import type { Booking } from "../../types/booking";
@@ -83,6 +84,7 @@ export default function Dashboard() {
       <Sidebar />
       <div className="flex-1 p-6 overflow-y-auto">
         <Navbar />
+        <Overview />
         <BookingTable
           bookings={bookings}
           onRefresh={() => {

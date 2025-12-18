@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Navbar from "../../../components/dashboard/Navbar";
 import Sidebar from "../../../components/dashboard/Sidebar";
 import Room from "../../../components/dashboard/Room";
-import type { RoomDetail } from "@/types/Room";
+import type { RoomType } from "@/types/Room_type";
 
 export default function RoomsPage() {
   const router = useRouter();
 
-  const [rooms, setRooms] = useState<RoomDetail[]>([]);
+  const [rooms, setRooms] = useState<RoomType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -27,6 +27,8 @@ export default function RoomsPage() {
   }, [router]);
 
   const fetchRooms = async (token: string) => {
+    setIsLoading(true);
+
     try {
       const response = await fetch("http://localhost:8000/api/rooms", {
         headers: {
@@ -36,28 +38,28 @@ export default function RoomsPage() {
         credentials: "include",
       });
 
-      if (response.ok) {
-        const data = await response.json();
-
-        let roomsData: RoomDetail[] = [];
-
-        // fleksibel seperti hotel & booking
-        if (Array.isArray(data)) {
-          roomsData = data;
-        } else if (data.data && Array.isArray(data.data)) {
-          roomsData = data.data;
-        } else if (data.rooms && Array.isArray(data.rooms)) {
-          roomsData = data.rooms;
-        } else {
-          console.warn("Unexpected API response format:", data);
-          roomsData = [];
-        }
-
-        setRooms(roomsData);
-      } else {
+      if (!response.ok) {
         console.error("Failed to fetch rooms:", response.statusText);
         setRooms([]);
+        return;
       }
+
+      const data = await response.json();
+
+      let roomsData: RoomType[] = [];
+
+      // 🔄 fleksibel: array langsung / data / rooms
+      if (Array.isArray(data)) {
+        roomsData = data;
+      } else if (Array.isArray(data?.data)) {
+        roomsData = data.data;
+      } else if (Array.isArray(data?.rooms)) {
+        roomsData = data.rooms;
+      } else {
+        console.warn("Unexpected API response format:", data);
+      }
+
+      setRooms(roomsData);
     } catch (error) {
       console.error("Error fetching rooms:", error);
       setRooms([]);
@@ -79,7 +81,7 @@ export default function RoomsPage() {
           <p className="mt-4">Loading rooms...</p>
         ) : (
           <Room
-            rooms={rooms}
+            roomTypes={rooms}
             onRefresh={() => {
               const token = localStorage.getItem("token");
               if (token) fetchRooms(token);

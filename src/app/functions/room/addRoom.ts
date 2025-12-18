@@ -1,7 +1,15 @@
-// app/functions/room/addRoom.ts
-import { RoomDetail } from "@/types/Room";
+import { RoomType } from "@/types/Room_type";
 
-export async function addRoom(room: RoomDetail): Promise<boolean> {
+interface AddRoomPayload {
+  id_hotel: number;
+  room_number: string;
+  status: "available" | "occupied" | "maintenance";
+}
+
+export async function addRoom(
+  roomType: RoomType,
+  payload: AddRoomPayload
+): Promise<boolean> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms`, {
     method: "POST",
     headers: {
@@ -9,11 +17,11 @@ export async function addRoom(room: RoomDetail): Promise<boolean> {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({
-      id_rooms_type: room.id_rooms_type,
-      id_hotel: room.id_hotel,
-      room_number: room.room_number,
-      status: room.status,
-      price_per_night: room.price_per_night,
+      id_rooms_type: roomType.id,
+      id_hotel: payload.id_hotel,
+      room_number: payload.room_number,
+      status: payload.status,
+      price_per_night: roomType.price_per_night,
     }),
   });
 

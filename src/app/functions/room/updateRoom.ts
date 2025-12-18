@@ -1,9 +1,15 @@
-// app/functions/room/updateRoom.ts
-import { RoomDetail } from "@/types/Room";
+import { RoomType } from "@/types/Room_type";
+
+interface UpdateRoomPayload {
+  id_hotel: number;
+  room_number: string;
+  status: "available" | "occupied" | "maintenance";
+}
 
 export async function updateRoom(
   id: number,
-  room: RoomDetail
+  roomType: RoomType,
+  payload: UpdateRoomPayload
 ): Promise<boolean> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/${id}`, {
     method: "PUT",
@@ -12,11 +18,11 @@ export async function updateRoom(
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({
-      id_rooms_type: room.id_rooms_type,
-      id_hotel: room.id_hotel,
-      room_number: room.room_number,
-      status: room.status,
-      price_per_night: room.price_per_night,
+      id_rooms_type: roomType.id,
+      id_hotel: payload.id_hotel,
+      room_number: payload.room_number,
+      status: payload.status,
+      price_per_night: roomType.price_per_night,
     }),
   });
 
